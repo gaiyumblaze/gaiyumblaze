@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GaiyumBlaze | Premium Gaming Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="gp-header">
+        <div class="header-left">
+            <img src="https://i.ibb.co.com/rGh17mKG/FB-IMG-1783239687813.jpg" alt="Logo" class="logo">
+            <span class="brand-name">GaiyumBlaze</span>
+        </div>
+        
+        <div class="header-right-container" style="display: flex; align-items: center; gap: 8px;">
+            <div id="user-status-area" style="display: flex; align-items: center; gap: 10px;">
+                <button class="gp-join-btn" id="main-auth-btn" onclick="openPopup()">Join Squad</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+        </div>
+
+        <nav class="nav-links" id="navLinks">
+            <a href="#" class="nav-item active" onclick="handleNavClick(this)"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="#videos-section" class="nav-item" onclick="handleNavClick(this)"><i class="fa-solid fa-play"></i> Videos</a>
+            <a href="#games-section" class="nav-item" onclick="handleNavClick(this)"><i class="fa-solid fa-gamepad"></i> Game Zone</a>
+            <a href="#" class="nav-item" id="nav-reg-btn" onclick="openPopup(); handleNavClick(this)"><i class="fa-solid fa-user-plus"></i> Register</a>
+        </nav>
+    </header>
+
+    <section class="hero-banner">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="badge"><i class="fa-solid fa-bolt"></i> Official Hub</span>
+            <h1>GaiyumBlaze</h1>
+            <p>Welcome to the ultimate destination for High-Energy Gaming, exclusive Vlogs, and premium Entertainment.</p>
+            
+            <div id="gp-auth-section" style="margin-top:20px; text-align:left;">
+                <div class="gp-button-wrap">
+                    <button class="gp-btn-join" id="hero-auth-btn" onclick="openPopup()">JOIN US</button>
+                    <a class="gp-btn-subscribe" href="https://youtube.com/@gaiyumblaze?si=LG9YDSakJSW46bHq" target="_blank">SUBSCRIBE</a>
+                </div>
+                <div class="gp-welcome-box">
+                    <h3 class="gp-welcome-title" id="welcome-text-title">Welcome to GaiyumBlaze!</h3>
+                    <p class="gp-welcome-text">Gaming Community | Subscribe for Daily Content</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="control-panel">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="videoSearch" placeholder="Search videos here..." oninput="searchVideos()">
+            </div>
+            <div class="category-wrapper">
+                <button class="cat-btn active" onclick="filterCategory('all', event)">All Videos</button>
+                <button class="cat-btn" onclick="filterCategory('movie', event)">Movies</button>
+                <button class="cat-btn" onclick="filterCategory('gaming', event)">Gaming</button>
+                <button class="cat-btn" onclick="filterCategory('vlog', event)">Vlogs</button>
+                <button class="cat-btn" onclick="filterCategory('entertainment', event)">Entertainment</button>
+            </div>
+        </div>
+
+        <section id="videos-section" class="main-section">
+            <h2 class="section-title"><span class="red-line"></span><i class="fa-solid fa-fire text-red"></i> Featured Videos</h2>
+            <div class="video-grid" id="videoContainer"></div>
+        </section>
+    </main>
+
+    <!-- Ultimate Unique ID Login & Sign Up Popup -->
+    <div id="gpPopup" class="gp-popup">
+        <div class="gp-popup-content">
+            <span class="gp-close" onclick="closePopup()">&times;</span>
+            <div class="gp-form-box">
+                <h3 class="gp-form-title" id="auth-box-title">SQUAD ACCESS</h3>
+                
+                <!-- Tab Controls -->
+                <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+                    <button id="tab-login" onclick="switchAuthMode('login')" style="background:#ff0000; color:#fff; border:none; padding:6px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">LOGIN</button>
+                    <button id="tab-signup" onclick="switchAuthMode('signup')" style="background:#333; color:#aaa; border:none; padding:6px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">SIGN UP</button>
+                </div>
+
+                <!-- Main Form Inputs -->
+                <div id="auth-fields-area">
+                    <!-- Login Inputs (Unique ID Mode) -->
+                    <div id="login-inputs-wrap">
+                        <input type="text" id="login-uid" placeholder="Enter Your Unique ID (e.g., GB-1234)" style="width:100%; padding:10px; margin-bottom:10px; background:#222; border:1px solid #444; color:#fff; border-radius:4px;">
+                    </div>
+                    
+                    <!-- Signup Inputs (Email Mode) -->
+                    <div id="signup-inputs-wrap" style="display:none;">
+                        <input type="email" id="signup-email" placeholder="Enter Email Address" style="width:100%; padding:10px; margin-bottom:10px; background:#222; border:1px solid #444; color:#fff; border-radius:4px;">
+                    </div>
+
+                    <input type="password" id="auth-password" placeholder="Password" style="width:100%; padding:10px; margin-bottom:15px; background:#222; border:1px solid #444; color:#fff; border-radius:4px;">
+                    
+                    <button class="gp-submit-btn" id="main-submit-action" style="width:100%; font-weight:bold;" onclick="processAuthSubmit()">PROCEED</button>
+                </div>
+
+                <!-- Forgot Password Trigger -->
+                <div style="text-align:right; margin-top:10px;">
+                    <a href="javascript:void(0)" onclick="handleForgotPassword()" style="color:#aaa; font-size:12px; text-decoration:none;">Forgot Password?</a>
+                </div>
+
+                <div style="text-align:center; margin: 10px 0; color:#aaa; font-size:12px;">OR</div>
+
+                <!-- Google Login Button -->
+                <button onclick="handleGoogleLogin()" style="width:100%; padding:10px; background:#fff; color:#000; font-weight:bold; border:none; border-radius:4px; display:flex; align-items:center; justify-content:center; gap:10px; cursor:pointer;">
+                    <i class="fa-brands fa-google" style="color:#ea4335;"></i> Continue with Google
+                </button>
+
+                <div id="msg" style="margin-top:10px; color:#ff0000; font-size:13px; text-align:center; font-weight:bold;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- Firebase Auth & Firestore Logic -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+      import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+      import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD0jyJo7j3iU4CeUGsuxqZa6RCYe28s-JQ",
+        authDomain: "gaiyumblaze-auth.firebaseapp.com",
+        projectId: "gaiyumblaze-auth",
+        storageBucket: "gaiyumblaze-auth.firebasestorage.app",
+        messagingSenderId: "723612584485",
+        appId: "1:723612584485:web:4ce26adcbfa9fdc66bcdcc"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const provider = new GoogleAuthProvider();
+
+      let currentMode = 'login'; 
+      let globalUser = null;
+
+      // Toggle Mode
+      window.switchAuthMode = function(mode) {
+          currentMode = mode;
+          const loginWrap = document.getElementById("login-inputs-wrap");
+          const signupWrap = document.getElementById("signup-inputs-wrap");
+          const tabLogin = document.getElementById("tab-login");
+          const tabSignup = document.getElementById("tab-signup");
+
+          if(mode === 'login') {
+              loginWrap.style.display = "block";
+              signupWrap.style.display = "none";
+              tabLogin.style.background = "#ff0000"; tabLogin.style.color = "#fff";
+              tabSignup.style.background = "#333"; tabSignup.style.color = "#aaa";
+          } else {
+              loginWrap.style.display = "none";
+              signupWrap.style.display = "block";
+              tabLogin.style.background = "#333"; tabLogin.style.color = "#aaa";
+              tabSignup.style.background = "#ff0000"; tabSignup.style.color = "#fff";
+          }
+          document.getElementById("msg").innerText = "";
+      }
+
+      // Process Action
+      window.processAuthSubmit = async function() {
+          const password = document.getElementById("auth-password").value;
+          document.getElementById("msg").innerText = "";
+
+          if(currentMode === 'signup') {
+              const email = document.getElementById("signup-email").value;
+              if(!email || !password) return alert("Please fill all signup fields!");
+
+              try {
+                  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                  const user = userCredential.user;
+                  
+                  // Generate unique user number (e.g., GB-4829)
+                  const uniqueNum = "GB-" + Math.floor(1000 + Math.random() * 9000);
+
+                  // Save connection to Firestore DB
+                  await setDoc(doc(db, "users", user.uid), {
+                      email: email,
+                      uniqueID: uniqueNum
+                  });
+                  await setDoc(doc(db, "uids", uniqueNum), {
+                      email: email
+                  });
+
+                  alert(`🎉 Registration Successful!\n\nYOUR EXCLUSIVE UNIQUE ID: ${uniqueNum}\n\nPlease save this ID to login next time!`);
+                  closePopup();
+              } catch(err) {
+                  document.getElementById("msg").innerText = "Signup Error: " + err.message;
+              }
+
+          } else {
+              // Unique ID Login Mode
+              const uniqueIDInput = document.getElementById("login-uid").value.trim();
+              if(!uniqueIDInput || !password) return alert("Please enter your Unique ID and Password!");
+
+              try {
+                  // Find email associated with this Unique ID in Firestore
+                  const docRef = doc(db, "uids", uniqueIDInput);
+                  const docSnap = await getDoc(docRef);
+
+                  if (docSnap.exists()) {
+                      const targetEmail = docSnap.data().email;
+                      // Sign in with Firebase using the retrieved email
+                      await signInWithEmailAndPassword(auth, targetEmail, password);
+                      closePopup();
+                  } else {
+                      document.getElementById("msg").innerText = "Error: Invalid Unique ID! Not found.";
+                  }
+              } catch(err) {
+                  document.getElementById("msg").innerText = "Login Failed: " + err.message;
+              }
+          }
+      }
+
+      // Password Reset with Email Link (Safer & Easier than custom OTP)
+      window.handleForgotPassword = function() {
+          const email = prompt("Enter your registered Email Address to receive password reset link:");
+          if(!email) return;
+
+          sendPasswordResetEmail(auth, email)
+              .then(() => {
+                  alert("🔐 A password reset secure link has been sent to your email! Check your inbox/spam folder.");
+              })
+              .catch(err => alert("Error: " + err.message));
+      }
+
+      // Google Login
+      window.handleGoogleLogin = function() {
+        signInWithPopup(auth, provider)
+          .then(async (result) => {
+              const user = result.user;
+              const docRef = doc(db, "users", user.uid);
+              const docSnap = await getDoc(docRef);
+              
+              if(!docSnap.exists()) {
+                  const uniqueNum = "GB-" + Math.floor(1000 + Math.random() * 9000);
+                  await setDoc(doc(db, "users", user.uid), { email: user.email, uniqueID: uniqueNum });
+                  await setDoc(doc(db, "uids", uniqueNum), { email: user.email });
+                  alert(`Google Registration Successful!\nYour Unique Login ID: ${uniqueNum}`);
+              }
+              closePopup();
+          })
+          .catch((error) => document.getElementById("msg").innerText = error.message);
+      }
+
+      // Logout
+      window.handleLogout = function() {
+        signOut(auth).then(() => window.location.reload());
+      }
+
+      // Session Control
+      onAuthStateChanged(auth, async (user) => {
+        globalUser = user;
+        const userStatusArea = document.getElementById("user-status-area");
+        const welcomeTitle = document.getElementById("welcome-text-title");
+        const heroAuthBtn = document.getElementById("hero-auth-btn");
+
+        if (user) {
+          let userDisplayID = "Active";
+          try {
+              const docSnap = await getDoc(doc(db, "users", user.uid));
+              if(docSnap.exists()) { userDisplayID = docSnap.data().uniqueID; }
+          } catch(e){}
+
+          if(userStatusArea) {
+              userStatusArea.innerHTML = `<span style="color:#00ff00; font-size:13px; font-weight:bold;"><i class="fa-solid fa-circle-user"></i> ${userDisplayID}</span>
+                                          <button class="gp-join-btn" style="background:#333; border:1px solid #ff0000;" onclick="handleLogout()">Logout</button>`;
+          }
+          if(welcomeTitle) welcomeTitle.innerText = `Welcome back, ${userDisplayID}!`;
+          if(heroAuthBtn) heroAuthBtn.style.display = "none";
+          document.getElementById("nav-reg-btn").style.display = "none";
+        } else {
+            if(heroAuthBtn) heroAuthBtn.style.display = "inline-block";
+            document.getElementById("nav-reg-btn").style.display = "inline-block";
+        }
+      });
+
+      // Interceptor
+      document.addEventListener("click", function(e) {
+          if (e.target.closest(".video-card") || e.target.closest(".play-btn") || e.target.id === "videoContainer") {
+              if (!globalUser) {
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
+                  if(typeof closeVideo === "function") closeVideo(); 
+                  openPopup();
+                  alert("🔐 Security Alert: Please Login with your Unique ID or Sign up to watch videos!");
+              }
+          }
+      }, true);
+    </script>
+</body>
+</html>
