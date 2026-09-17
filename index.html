@@ -11,6 +11,7 @@
   :root{
     --bg: #0c0d10;
     --bg-elev: #16181d;
+    --bg-card: #1b1e24;
     --blaze: #ff5a1f;
     --blaze-2: #ffb000;
     --text: #f3f1ea;
@@ -27,33 +28,69 @@
     overflow-x:hidden;
   }
   a{color:inherit;text-decoration:none;}
+  h1,h2,h3{font-family:'Archivo Black',sans-serif;font-weight:400;margin:0;}
 
   /* ---------- Nav ---------- */
   header{
     position:fixed;top:0;left:0;right:0;z-index:100;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:18px 4vw;
-    background:linear-gradient(to bottom, rgba(12,13,16,0.95), rgba(12,13,16,0));
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+    padding:16px 4vw;
+    background:linear-gradient(to bottom, rgba(12,13,16,0.97), rgba(12,13,16,0));
     transition:background .3s;
   }
-  header.scrolled{background:rgba(10,11,13,0.92);backdrop-filter:blur(6px);}
+  header.scrolled{background:rgba(10,11,13,0.94);backdrop-filter:blur(6px);}
   .brand{
     font-family:'Archivo Black',sans-serif;
-    font-size:22px;letter-spacing:0.5px;
-    display:flex;align-items:center;gap:8px;
+    font-size:21px;letter-spacing:0.3px;
+    display:flex;align-items:center;gap:8px;flex:0 0 auto;cursor:pointer;
   }
-  .brand-dot{width:10px;height:10px;border-radius:2px;background:var(--blaze);display:inline-block;transform:rotate(45deg);}
-  .brand span{background:linear-gradient(90deg,var(--blaze),var(--blaze-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
-  nav ul{list-style:none;display:flex;gap:28px;margin:0;padding:0;}
-  nav a{font-size:14px;font-weight:500;color:var(--text-dim);}
+  .brand-dot{width:10px;height:10px;border-radius:2px;background:var(--blaze);display:inline-block;transform:rotate(45deg);flex:0 0 auto;}
+  .brand span.txt{background:linear-gradient(90deg,var(--blaze),var(--blaze-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  nav{display:flex;align-items:center;gap:22px;flex:1;}
+  nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0;}
+  nav a{font-size:13.5px;font-weight:500;color:var(--text-dim);white-space:nowrap;}
   nav a:hover{color:var(--text);}
+
+  .search-wrap{position:relative;flex:0 0 auto;width:min(38vw,260px);}
+  .search-box{
+    display:flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:7px;
+    padding:8px 12px;
+  }
+  .search-box input{
+    background:none;border:none;outline:none;color:var(--text);font-family:inherit;font-size:13.5px;width:100%;
+  }
+  .search-box input::placeholder{color:var(--text-dim);}
+  .search-dd{
+    position:absolute;top:calc(100% + 8px);left:0;right:0;
+    background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;
+    overflow:hidden;display:none;max-height:70vh;overflow-y:auto;z-index:50;
+    box-shadow:0 12px 32px rgba(0,0,0,0.5);
+  }
+  .search-dd.open{display:block;}
+  .search-dd-item{display:flex;gap:10px;padding:9px 12px;align-items:center;cursor:pointer;}
+  .search-dd-item:hover{background:rgba(255,255,255,0.06);}
+  .search-dd-item img{width:64px;height:36px;object-fit:cover;border-radius:4px;background:#000;flex:0 0 auto;}
+  .search-dd-item .t{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .search-dd-item .c{font-size:11.5px;color:var(--text-dim);}
+  .search-dd-empty{padding:16px;text-align:center;color:var(--text-dim);font-size:13px;}
+  .search-dd-more{padding:10px 12px;text-align:center;font-size:12.5px;color:var(--blaze-2);cursor:pointer;border-top:1px solid var(--border);}
+
+  /* ---------- Announcement ---------- */
+  .announce{
+    margin-top:60px;padding:11px 4vw;text-align:center;font-size:13.5px;
+    background:linear-gradient(90deg, rgba(255,90,31,0.16), rgba(255,176,0,0.1));
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  .announce a{color:var(--blaze-2);font-weight:600;}
 
   /* ---------- Hero ---------- */
   .hero{
     position:relative;
-    height:88vh;min-height:520px;
+    height:86vh;min-height:500px;
     display:flex;align-items:flex-end;
-    padding:0 4vw 64px;
+    padding:0 4vw 60px;
     background-size:cover;background-position:center top;
   }
   .hero::after{
@@ -66,10 +103,10 @@
   .hero-eyebrow{font-size:13px;color:var(--blaze-2);font-weight:600;margin-bottom:14px;}
   .hero-title{
     font-family:'Archivo Black',sans-serif;
-    font-size:clamp(34px,6vw,64px);
-    line-height:1.02;margin:0 0 18px;
+    font-size:clamp(32px,6vw,60px);
+    line-height:1.02;margin:0 0 16px;
   }
-  .hero-desc{font-size:16px;line-height:1.6;color:var(--text-dim);max-width:520px;margin:0 0 28px;}
+  .hero-desc{font-size:15.5px;line-height:1.6;color:var(--text-dim);max-width:520px;margin:0 0 26px;}
   .hero-btns{display:flex;gap:14px;}
   .btn{
     border:none;border-radius:6px;padding:13px 26px;font-size:15px;font-weight:600;
@@ -82,68 +119,95 @@
   .btn-ghost:hover{background:rgba(255,255,255,0.2);}
 
   /* ---------- Rows ---------- */
-  main{position:relative;z-index:3;margin-top:-48px;padding-bottom:80px;}
-  .row{padding:0 4vw;margin-bottom:38px;}
+  main{position:relative;z-index:3;padding-bottom:80px;}
+  main.no-hero{padding-top:100px;}
+  .row{padding:0 4vw;margin-bottom:36px;}
   .row-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;}
-  .row-title{font-size:19px;font-weight:700;margin:0;}
+  .row-title{font-size:18.5px;font-weight:700;margin:0;}
   .row-track{
     display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;
     scrollbar-width:none;
   }
   .row-track::-webkit-scrollbar{display:none;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;}
+
   .card{
     position:relative;flex:0 0 auto;
-    width:min(46vw,260px);aspect-ratio:16/9;
+    width:min(46vw,250px);aspect-ratio:16/9;
     border-radius:8px;overflow:hidden;cursor:pointer;
     background:var(--bg-elev);
     transition:transform .25s ease;
     border:1px solid var(--border);
   }
+  .grid .card{width:100%;}
   .card img{width:100%;height:100%;object-fit:cover;display:block;}
   .card:hover{transform:scale(1.045);z-index:5;border-color:rgba(255,90,31,0.5);}
   .card-overlay{
     position:absolute;inset:0;display:flex;align-items:flex-end;
-    background:linear-gradient(to top, rgba(0,0,0,0.85), transparent 55%);
+    background:linear-gradient(to top, rgba(0,0,0,0.88), transparent 55%);
     opacity:0;transition:opacity .2s;padding:12px;
   }
   .card:hover .card-overlay{opacity:1;}
   .card-overlay h4{font-size:13.5px;margin:0;font-weight:600;line-height:1.3;}
   .play-badge{
     position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-    width:44px;height:44px;border-radius:50%;
+    width:42px;height:42px;border-radius:50%;
     background:rgba(0,0,0,0.5);border:1.5px solid rgba(255,255,255,0.6);
     display:flex;align-items:center;justify-content:center;
-    opacity:0;transition:opacity .2s;
+    opacity:0;transition:opacity .2s;font-size:14px;
   }
   .card:hover .play-badge{opacity:1;}
+  .badges{position:absolute;top:8px;left:8px;display:flex;gap:6px;z-index:2;}
+  .badge{
+    font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:4px;letter-spacing:.2px;
+    background:rgba(0,0,0,0.55);backdrop-filter:blur(2px);
+  }
+  .badge.new{color:var(--blaze-2);border:1px solid rgba(255,176,0,0.5);}
+  .badge.trend{color:var(--blaze);border:1px solid rgba(255,90,31,0.5);}
+  .views-tag{position:absolute;bottom:8px;right:8px;font-size:10.5px;color:var(--text-dim);background:rgba(0,0,0,0.55);padding:3px 7px;border-radius:4px;z-index:2;opacity:0;transition:opacity .2s;}
+  .card:hover .views-tag{opacity:1;}
 
-  .empty-state{
-    padding:120px 4vw;text-align:center;color:var(--text-dim);
-  }
-  .empty-state h2{font-family:'Archivo Black',sans-serif;color:var(--text);font-size:26px;margin-bottom:10px;}
+  .empty-state{padding:110px 4vw;text-align:center;color:var(--text-dim);}
+  .empty-state h2{font-family:'Archivo Black',sans-serif;color:var(--text);font-size:24px;margin-bottom:10px;}
 
-  /* ---------- Modal ---------- */
-  .modal{
-    position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.9);
-    display:none;align-items:center;justify-content:center;padding:4vw;
+  /* ---------- Category grid page ---------- */
+  .page-wrap{padding:110px 4vw 70px;max-width:1200px;margin:0 auto;}
+  .page-title{font-size:clamp(24px,4vw,36px);margin-bottom:8px;}
+  .page-sub{color:var(--text-dim);font-size:14px;margin-bottom:28px;}
+  .cat-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+  .cat-card{
+    border-radius:10px;padding:22px 18px;border:1px solid var(--border);cursor:pointer;
+    display:flex;flex-direction:column;gap:8px;transition:transform .2s;
   }
-  .modal.open{display:flex;}
-  .modal-inner{width:100%;max-width:960px;}
-  .modal-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;}
-  .modal-frame iframe{width:100%;height:100%;border:0;}
-  .modal-meta{padding:18px 4px 0;}
-  .modal-meta h3{font-size:20px;margin:0 0 8px;}
-  .modal-meta p{color:var(--text-dim);font-size:14.5px;line-height:1.6;margin:0;}
-  .modal-close{
-    position:absolute;top:-46px;right:0;background:none;border:none;color:var(--text);
-    font-size:28px;cursor:pointer;line-height:1;
-  }
+  .cat-card:hover{transform:translateY(-3px);}
+  .cat-card .icon{font-size:26px;}
+  .cat-card .name{font-size:15.5px;font-weight:700;}
+  .cat-card .desc{font-size:12.5px;color:var(--text-dim);line-height:1.5;}
+
+  /* ---------- Watch page ---------- */
+  .watch-wrap{padding:100px 4vw 70px;max-width:960px;margin:0 auto;}
+  .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);font-size:13.5px;margin-bottom:18px;cursor:pointer;}
+  .back-link:hover{color:var(--text);}
+  .player-frame{width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;}
+  .player-frame iframe{width:100%;height:100%;border:0;}
+  .watch-meta{padding:20px 2px 0;}
+  .watch-meta h1{font-size:clamp(20px,3vw,28px);margin-bottom:10px;}
+  .watch-sub{display:flex;flex-wrap:wrap;gap:12px;align-items:center;color:var(--text-dim);font-size:13px;margin-bottom:16px;}
+  .watch-sub .chip{background:var(--bg-elev);border:1px solid var(--border);padding:4px 10px;border-radius:20px;}
+  .watch-actions{display:flex;gap:10px;margin-bottom:20px;}
+  .icon-btn{background:var(--bg-elev);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:9px 16px;font-size:13.5px;display:flex;align-items:center;gap:7px;cursor:pointer;font-family:inherit;}
+  .icon-btn:hover{border-color:var(--blaze);}
+  .watch-desc{color:var(--text-dim);font-size:14.5px;line-height:1.7;white-space:pre-line;margin-bottom:18px;}
+  .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;}
+  .tag-chip{font-size:12px;color:var(--blaze-2);background:rgba(255,176,0,0.1);border:1px solid rgba(255,176,0,0.25);padding:4px 10px;border-radius:14px;}
+  .related-title{font-size:17px;margin-bottom:14px;}
 
   footer{padding:40px 4vw;color:var(--text-dim);font-size:13px;border-top:1px solid var(--border);}
 
-  @media(max-width:640px){
-    nav{display:none;}
-    .hero{padding:0 5vw 44px;height:72vh;}
+  @media(max-width:760px){
+    nav ul{display:none;}
+    .search-wrap{width:auto;flex:1;}
+    .hero{padding:0 5vw 44px;height:70vh;}
     .row{padding:0 5vw;}
   }
 </style>
@@ -151,41 +215,25 @@
 <body>
 
 <header id="siteHeader">
-  <div class="brand"><span class="brand-dot"></span><span id="brandName">GaiyumBlaze</span></div>
-  <nav><ul id="navCategories"><li><a href="#top">হোম</a></li></ul></nav>
+  <div class="brand" id="brandLink"><span class="brand-dot"></span><span class="txt" id="brandName">GaiyumBlaze</span></div>
+  <nav>
+    <ul>
+      <li><a href="#/">হোম</a></li>
+      <li><a href="#/categories">ক্যাটাগরি</a></li>
+    </ul>
+    <div class="search-wrap">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="ভিডিও খুঁজুন...">
+      </div>
+      <div class="search-dd" id="searchDD"></div>
+    </div>
+  </nav>
 </header>
 
-<section class="hero" id="heroSection">
-  <div class="hero-content">
-    <div class="hero-eyebrow" id="heroEyebrow">এখন দেখুন</div>
-    <h1 class="hero-title" id="heroTitle">GaiyumBlaze</h1>
-    <p class="hero-desc" id="heroDesc">তোমার নিজের সংগ্রহ করা ভিডিওগুলো এক জায়গায়, প্রিমিয়াম অভিজ্ঞতায়।</p>
-    <div class="hero-btns">
-      <button class="btn btn-play" id="heroPlayBtn">▶ চালান</button>
-      <button class="btn btn-ghost" id="heroInfoBtn">বিস্তারিত</button>
-    </div>
-  </div>
-</section>
-
-<main id="rows"></main>
-
-<div class="empty-state" id="emptyState" style="display:none;">
-  <h2>এখনো কোনো ভিডিও যোগ হয়নি</h2>
-  <p>Admin panel থেকে প্রথম ভিডিওটি যোগ করুন।</p>
-</div>
+<div id="root"></div>
 
 <footer>© <span id="year"></span> <span id="footerBrand">GaiyumBlaze</span> — সব স্বত্ব সংরক্ষিত।</footer>
-
-<div class="modal" id="playerModal">
-  <div class="modal-inner">
-    <button class="modal-close" id="modalClose">&times;</button>
-    <div class="modal-frame"><iframe id="modalIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
-    <div class="modal-meta">
-      <h3 id="modalTitle"></h3>
-      <p id="modalDesc"></p>
-    </div>
-  </div>
-</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -203,16 +251,80 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 document.getElementById('year').textContent = new Date().getFullYear();
+document.getElementById('brandLink').onclick = ()=> location.hash = '#/';
+
+let allVideos = [];
+let allCategories = [];
+let siteSettings = {};
+let dataReady = false;
+
+const DEFAULT_SECTIONS = [
+  {id:'trending', type:'trending', title:'🔥 Trending Now', enabled:true},
+  {id:'featured', type:'featured', title:'⭐ Featured', enabled:true},
+  {id:'new', type:'new', title:'🆕 Recently Added', enabled:true},
+  {id:'all', type:'all', title:'📺 সব ভিডিও', enabled:true}
+];
 
 function extractYouTubeId(url){
   if(!url) return null;
   const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
   return m ? m[1] : null;
 }
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function thumbOf(v){
+  const ytId = extractYouTubeId(v.youtubeLink);
+  return v.thumbnail && v.thumbnail.trim() ? v.thumbnail : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '');
+}
+function isNew(v){
+  if(!v.createdAt || !v.createdAt.toDate) return false;
+  const days = (Date.now() - v.createdAt.toDate().getTime()) / 86400000;
+  return days <= 7;
+}
+function cssSafe(s){return (s||'').replace(/[^a-zA-Z0-9]/g,'-');}
 
-// ---------- Load site design settings ----------
-db.collection('settings').doc('site').get().then(doc=>{
-  const s = doc.exists ? doc.data() : {};
+function cardHtml(v){
+  const thumb = thumbOf(v);
+  let badges = '';
+  if(isNew(v)) badges += '<span class="badge new">নতুন</span>';
+  if(v.trending) badges += '<span class="badge trend">🔥 ট্রেন্ডিং</span>';
+  return `
+    <div class="card" data-id="${v.id}">
+      <img src="${thumb}" alt="${escapeHtml(v.title)}" loading="lazy">
+      ${badges ? `<div class="badges">${badges}</div>` : ''}
+      <div class="views-tag">${(v.views||0)} ভিউ</div>
+      <div class="play-badge">▶</div>
+      <div class="card-overlay"><h4>${escapeHtml(v.title||'শিরোনামহীন')}</h4></div>
+    </div>
+  `;
+}
+function bindCards(container){
+  container.querySelectorAll('.card[data-id]').forEach(el=>{
+    el.onclick = ()=> { location.hash = '#/watch/' + el.dataset.id; };
+  });
+}
+
+// ---------- Load data once ----------
+Promise.all([
+  db.collection('settings').doc('site').get(),
+  db.collection('videos').orderBy('createdAt','desc').get(),
+  db.collection('categories').orderBy('order','asc').get().catch(()=>({docs:[]}))
+]).then(([settingsDoc, videosSnap, catsSnap])=>{
+  siteSettings = settingsDoc.exists ? settingsDoc.data() : {};
+  applySiteSettings();
+
+  allVideos = videosSnap.docs.map(d=>({id:d.id, ...d.data()}));
+  allCategories = catsSnap.docs.map(d=>({id:d.id, ...d.data()}));
+
+  dataReady = true;
+  router();
+}).catch(err=>{
+  document.getElementById('root').innerHTML = `<div class="empty-state"><h2>ডেটা লোড করা যায়নি</h2><p>${escapeHtml(err.message)}</p></div>`;
+});
+
+function applySiteSettings(){
+  const s = siteSettings;
   const root = document.documentElement.style;
   if(s.blazeColor) root.setProperty('--blaze', s.blazeColor);
   if(s.blaze2Color) root.setProperty('--blaze-2', s.blaze2Color);
@@ -222,96 +334,253 @@ db.collection('settings').doc('site').get().then(doc=>{
     document.getElementById('footerBrand').textContent = s.siteName;
     document.title = s.siteName;
   }
-  if(s.heroTitle) document.getElementById('heroTitle').textContent = s.heroTitle;
-  if(s.heroDesc) document.getElementById('heroDesc').textContent = s.heroDesc;
-  if(s.heroEyebrow) document.getElementById('heroEyebrow').textContent = s.heroEyebrow;
-  if(s.heroBackdrop){
-    document.getElementById('heroSection').style.backgroundImage =
-      `url('${s.heroBackdrop}')`;
+}
+
+// ---------- Router ----------
+window.addEventListener('hashchange', router);
+function router(){
+  if(!dataReady) return;
+  const hash = location.hash || '#/';
+  window.scrollTo(0,0);
+  closeSearchDD();
+  if(hash.startsWith('#/watch/')) renderWatch(decodeURIComponent(hash.slice(8)));
+  else if(hash.startsWith('#/category/')) renderCategoryVideos(decodeURIComponent(hash.slice(11)));
+  else if(hash === '#/categories') renderCategoriesPage();
+  else if(hash.startsWith('#/search')) renderSearchPage(new URLSearchParams(hash.split('?')[1]||'').get('q')||'');
+  else renderHome();
+}
+
+// ---------- Home ----------
+function renderHome(){
+  const root = document.getElementById('root');
+  const featured = allVideos.find(v=>v.featured) || allVideos[0];
+
+  let heroHtml = '';
+  if(featured){
+    const ytId = extractYouTubeId(featured.youtubeLink);
+    const backdrop = siteSettings.heroBackdrop && siteSettings.heroBackdrop.trim()
+      ? siteSettings.heroBackdrop
+      : (ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '');
+    heroHtml = `
+      <section class="hero" style="background-image:url('${backdrop}')">
+        <div class="hero-content">
+          <div class="hero-eyebrow">${escapeHtml(siteSettings.heroEyebrow || 'এখন দেখুন')}</div>
+          <h1 class="hero-title">${escapeHtml(siteSettings.heroTitle || featured.title || 'GaiyumBlaze')}</h1>
+          <p class="hero-desc">${escapeHtml(siteSettings.heroDesc || featured.description || '')}</p>
+          <div class="hero-btns">
+            <button class="btn btn-play" id="heroPlayBtn">▶ চালান</button>
+            <button class="btn btn-ghost" id="heroInfoBtn">বিস্তারিত</button>
+          </div>
+        </div>
+      </section>`;
   }
-}).catch(()=>{});
 
-// ---------- Load videos ----------
-let featuredVideo = null;
+  const announce = siteSettings.announcement || {};
+  const announceHtml = announce.enabled && announce.text ? `
+    <div class="announce">
+      <span>${escapeHtml(announce.text)}</span>
+      ${announce.link ? `<a href="${escapeHtml(announce.link)}" target="_blank" rel="noopener">${announce.linkLabel ? escapeHtml(announce.linkLabel) : 'দেখুন →'}</a>` : ''}
+    </div>` : '';
 
-db.collection('videos').orderBy('createdAt','desc').get().then(snap=>{
-  if(snap.empty){
-    document.getElementById('emptyState').style.display='block';
+  const sections = (siteSettings.homeSections && siteSettings.homeSections.length) ? siteSettings.homeSections : DEFAULT_SECTIONS;
+
+  let rowsHtml = '';
+  sections.forEach(sec=>{
+    if(!sec.enabled) return;
+    const vids = getVideosForSection(sec);
+    if(!vids.length) return;
+    rowsHtml += `
+      <div class="row">
+        <div class="row-head"><h2 class="row-title">${escapeHtml(sec.title)}</h2></div>
+        <div class="row-track">${vids.map(cardHtml).join('')}</div>
+      </div>`;
+  });
+
+  if(!allVideos.length){
+    root.innerHTML = heroHtml + announceHtml + `<main class="${featured?'':'no-hero'}"><div class="empty-state"><h2>এখনো কোনো ভিডিও যোগ হয়নি</h2><p>Admin panel থেকে প্রথম ভিডিওটি যোগ করুন।</p></div></main>`;
     return;
   }
-  const byCategory = {};
-  snap.forEach(doc=>{
-    const v = {id:doc.id, ...doc.data()};
-    const cat = v.category && v.category.trim() ? v.category.trim() : 'সব ভিডিও';
-    if(!byCategory[cat]) byCategory[cat] = [];
-    byCategory[cat].push(v);
-    if(v.featured && !featuredVideo) featuredVideo = v;
-  });
-  if(!featuredVideo){
-    const first = snap.docs[0].data();
-    featuredVideo = {id:snap.docs[0].id, ...first};
+
+  root.innerHTML = heroHtml + announceHtml + `<main style="margin-top:${featured?'-46px':'0'};" class="${featured?'':'no-hero'}">${rowsHtml}</main>`;
+
+  if(featured){
+    document.getElementById('heroPlayBtn').onclick = ()=> location.hash = '#/watch/'+featured.id;
+    document.getElementById('heroInfoBtn').onclick = ()=> location.hash = '#/watch/'+featured.id;
   }
-
-  // update hero with featured video (unless custom hero text/backdrop already set via settings)
-  if(featuredVideo){
-    const ytId = extractYouTubeId(featuredVideo.youtubeLink);
-    if(!document.getElementById('heroSection').style.backgroundImage && ytId){
-      document.getElementById('heroSection').style.backgroundImage =
-        `url('https://img.youtube.com/vi/${ytId}/maxresdefault.jpg')`;
-    }
-    document.getElementById('heroPlayBtn').onclick = ()=>openModal(featuredVideo);
-    document.getElementById('heroInfoBtn').onclick = ()=>openModal(featuredVideo);
-  }
-
-  const rowsEl = document.getElementById('rows');
-  const nav = document.getElementById('navCategories');
-  Object.keys(byCategory).forEach(cat=>{
-    const li = document.createElement('li');
-    li.innerHTML = `<a href="#cat-${cssSafe(cat)}">${cat}</a>`;
-    nav.appendChild(li);
-
-    const row = document.createElement('div');
-    row.className='row';
-    row.id = 'cat-'+cssSafe(cat);
-    row.innerHTML = `<div class="row-head"><h2 class="row-title">${cat}</h2></div><div class="row-track"></div>`;
-    const track = row.querySelector('.row-track');
-    byCategory[cat].forEach(v=>{
-      const ytId = extractYouTubeId(v.youtubeLink);
-      const thumb = v.thumbnail && v.thumbnail.trim() ? v.thumbnail : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '');
-      const card = document.createElement('div');
-      card.className='card';
-      card.innerHTML = `
-        <img src="${thumb}" alt="${escapeHtml(v.title||'')}" loading="lazy">
-        <div class="play-badge">▶</div>
-        <div class="card-overlay"><h4>${escapeHtml(v.title||'শিরোনামহীন')}</h4></div>
-      `;
-      card.onclick = ()=>openModal(v);
-      track.appendChild(card);
-    });
-    rowsEl.appendChild(row);
-  });
-});
-
-function cssSafe(s){return s.replace(/[^a-zA-Z0-9]/g,'-');}
-function escapeHtml(s){
-  return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  root.querySelectorAll('.row-track, .grid').forEach(bindCards);
 }
 
-function openModal(v){
+function getVideosForSection(sec){
+  if(sec.type === 'trending'){
+    return [...allVideos].sort((a,b)=>(b.trending?1:0)-(a.trending?1:0) || (b.views||0)-(a.views||0)).slice(0,12).filter(v=> v.trending || v.views>0);
+  }
+  if(sec.type === 'featured') return allVideos.filter(v=>v.featured).slice(0,12);
+  if(sec.type === 'new') return [...allVideos].sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).slice(0,12);
+  if(sec.type === 'category') return allVideos.filter(v=>(v.category||'').trim() === (sec.categoryName||'').trim());
+  return allVideos; // 'all'
+}
+
+// ---------- Categories page ----------
+function renderCategoriesPage(){
+  const root = document.getElementById('root');
+  const seen = new Set();
+  const cards = [];
+  allCategories.forEach(c=>{
+    seen.add(c.name.trim());
+    cards.push(c);
+  });
+  // auto-detect categories used in videos but not defined
+  allVideos.forEach(v=>{
+    const cat = (v.category||'').trim();
+    if(cat && !seen.has(cat)){ seen.add(cat); cards.push({name:cat, icon:'🎬', color:'#1b1e24'}); }
+  });
+
+  if(!cards.length){
+    root.innerHTML = `<div class="page-wrap"><h1 class="page-title">ক্যাটাগরি</h1><div class="empty-state"><h2>কোনো ক্যাটাগরি নেই</h2></div></div>`;
+    return;
+  }
+
+  root.innerHTML = `
+    <div class="page-wrap">
+      <h1 class="page-title">সব ক্যাটাগরি</h1>
+      <p class="page-sub">${cards.length}টি ক্যাটাগরি</p>
+      <div class="cat-card-grid">
+        ${cards.map(c=>`
+          <div class="cat-card" style="background:${c.color||'#1b1e24'};border-color:rgba(255,255,255,0.1);" data-cat="${escapeHtml(c.name)}">
+            <div class="icon">${c.icon||'🎬'}</div>
+            <div class="name">${escapeHtml(c.name)}</div>
+            ${c.description ? `<div class="desc">${escapeHtml(c.description)}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  root.querySelectorAll('.cat-card').forEach(el=>{
+    el.onclick = ()=> location.hash = '#/category/' + encodeURIComponent(el.dataset.cat);
+  });
+}
+
+function renderCategoryVideos(catName){
+  const root = document.getElementById('root');
+  const vids = allVideos.filter(v=>(v.category||'').trim() === catName.trim());
+  const catInfo = allCategories.find(c=>c.name.trim()===catName.trim());
+  root.innerHTML = `
+    <div class="page-wrap">
+      <div class="back-link" id="backBtn">← হোমে ফিরুন</div>
+      <h1 class="page-title">${catInfo && catInfo.icon ? catInfo.icon+' ' : ''}${escapeHtml(catName)}</h1>
+      <p class="page-sub">${vids.length}টি ভিডিও</p>
+      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>এই ক্যাটাগরিতে কোনো ভিডিও নেই</h2></div>`}
+    </div>`;
+  document.getElementById('backBtn').onclick = ()=> location.hash = '#/';
+  bindCards(root);
+}
+
+// ---------- Search page ----------
+function matchesQuery(v, q){
+  const hay = [v.title, v.category, v.description, v.tags].join(' ').toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+function renderSearchPage(q){
+  const root = document.getElementById('root');
+  const results = q ? allVideos.filter(v=>matchesQuery(v,q)) : [];
+  root.innerHTML = `
+    <div class="page-wrap">
+      <div class="back-link" id="backBtn">← হোমে ফিরুন</div>
+      <h1 class="page-title">"${escapeHtml(q)}" এর ফলাফল</h1>
+      <p class="page-sub">${results.length}টি ভিডিও পাওয়া গেছে</p>
+      ${results.length ? `<div class="grid">${results.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>কোনো ফলাফল পাওয়া যায়নি</h2><p>অন্য শব্দ দিয়ে খুঁজে দেখুন।</p></div>`}
+    </div>`;
+  document.getElementById('backBtn').onclick = ()=> location.hash = '#/';
+  bindCards(root);
+}
+
+// ---------- Watch page ----------
+function renderWatch(id){
+  const v = allVideos.find(x=>x.id===id);
+  const root = document.getElementById('root');
+  if(!v){
+    root.innerHTML = `<div class="page-wrap"><div class="empty-state"><h2>ভিডিও পাওয়া যায়নি</h2></div></div>`;
+    return;
+  }
   const ytId = extractYouTubeId(v.youtubeLink);
-  if(!ytId) return;
-  document.getElementById('modalIframe').src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
-  document.getElementById('modalTitle').textContent = v.title || '';
-  document.getElementById('modalDesc').textContent = v.description || '';
-  document.getElementById('playerModal').classList.add('open');
+  const related = allVideos.filter(x=>x.id!==v.id && (x.category||'')===(v.category||'')).slice(0,8);
+  const relatedPool = related.length ? related : allVideos.filter(x=>x.id!==v.id).slice(0,8);
+  const tags = (v.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+
+  root.innerHTML = `
+    <div class="watch-wrap">
+      <div class="back-link" id="backBtn">← ফিরে যান</div>
+      <div class="player-frame">
+        <iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div class="watch-meta">
+        <h1>${escapeHtml(v.title)}</h1>
+        <div class="watch-sub">
+          ${v.category ? `<span class="chip">${escapeHtml(v.category)}</span>` : ''}
+          ${v.duration ? `<span class="chip">${escapeHtml(v.duration)}</span>` : ''}
+          <span class="chip">${(v.views||0)+1} ভিউ</span>
+        </div>
+        <div class="watch-actions">
+          <button class="icon-btn" id="shareBtn">↗ শেয়ার</button>
+        </div>
+        <p class="watch-desc">${escapeHtml(v.description||'')}</p>
+        ${tags.length ? `<div class="tags-row">${tags.map(t=>`<span class="tag-chip">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+      </div>
+      ${relatedPool.length ? `
+        <h3 class="related-title">সম্পর্কিত ভিডিও</h3>
+        <div class="grid">${relatedPool.map(cardHtml).join('')}</div>
+      ` : ''}
+    </div>`;
+
+  document.getElementById('backBtn').onclick = ()=> history.length > 1 ? history.back() : (location.hash = '#/');
+  document.getElementById('shareBtn').onclick = ()=>{
+    const url = location.origin + location.pathname + '#/watch/' + v.id;
+    navigator.clipboard?.writeText(url).then(()=>{
+      document.getElementById('shareBtn').textContent = '✓ লিংক কপি হয়েছে';
+      setTimeout(()=> document.getElementById('shareBtn').innerHTML = '↗ শেয়ার', 1800);
+    });
+  };
+  bindCards(root);
+
+  // increment view count (allowed by security rules: public may update only 'views')
+  db.collection('videos').doc(v.id).update({
+    views: firebase.firestore.FieldValue.increment(1)
+  }).then(()=>{ v.views = (v.views||0)+1; }).catch(()=>{});
 }
-function closeModal(){
-  document.getElementById('playerModal').classList.remove('open');
-  document.getElementById('modalIframe').src = '';
+
+// ---------- Search box behavior ----------
+const searchInput = document.getElementById('searchInput');
+const searchDD = document.getElementById('searchDD');
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim();
+  if(!q){ closeSearchDD(); return; }
+  const results = allVideos.filter(v=>matchesQuery(v,q)).slice(0,6);
+  if(!results.length){
+    searchDD.innerHTML = `<div class="search-dd-empty">কোনো ফলাফল পাওয়া যায়নি</div>`;
+  } else {
+    searchDD.innerHTML = results.map(v=>`
+      <div class="search-dd-item" data-id="${v.id}">
+        <img src="${thumbOf(v)}" alt="">
+        <div><div class="t">${escapeHtml(v.title)}</div><div class="c">${escapeHtml(v.category||'')}</div></div>
+      </div>
+    `).join('') + `<div class="search-dd-more" id="ddMore">সব ফলাফল দেখুন →</div>`;
+    searchDD.querySelectorAll('.search-dd-item').forEach(el=>{
+      el.onclick = ()=>{ location.hash = '#/watch/'+el.dataset.id; searchInput.value=''; closeSearchDD(); };
+    });
+    document.getElementById('ddMore').onclick = ()=>{ goSearch(q); };
+  }
+  searchDD.classList.add('open');
+});
+searchInput.addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ goSearch(searchInput.value.trim()); }
+});
+function goSearch(q){
+  if(!q) return;
+  location.hash = '#/search?q=' + encodeURIComponent(q);
+  closeSearchDD();
 }
-document.getElementById('modalClose').onclick = closeModal;
-document.getElementById('playerModal').addEventListener('click', e=>{
-  if(e.target.id === 'playerModal') closeModal();
+function closeSearchDD(){ searchDD.classList.remove('open'); }
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.search-wrap')) closeSearchDD();
 });
 
 window.addEventListener('scroll', ()=>{
