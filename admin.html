@@ -138,20 +138,13 @@
       <div class="card-box">
         <h2 id="formTitle">Add New Video</h2>
         <div class="field">
-          <label>Video Source Type</label>
-          <select id="vSourceType">
-            <option value="youtube">YouTube Link</option>
-            <option value="gdrive">Google Drive Video Link</option>
-          </select>
-        </div>
-        <div class="field">
-          <label id="vLinkLabel">YouTube Link</label>
+          <label>YouTube Link</label>
           <input type="text" id="vLink" placeholder="https://youtube.com/watch?v=...">
         </div>
         <div class="grid2">
           <div class="field">
             <label>Title</label>
-            <input type="text" id="vTitle" placeholder="Video title">
+            <input type="text" id="vTitle" placeholder="Video name">
           </div>
           <div class="field">
             <label>Category</label>
@@ -165,7 +158,7 @@
         </div>
         <div class="grid2">
           <div class="field">
-            <label>Thumbnail URL (leave blank for auto thumbnail)</label>
+            <label>Thumbnail URL (leave blank for YouTube thumbnail)</label>
             <input type="text" id="vThumb" placeholder="https://...">
           </div>
           <div class="field">
@@ -175,15 +168,15 @@
         </div>
         <div class="field">
           <label>Tags (comma separated) — Optional</label>
-          <input type="text" id="vTags" placeholder="funny, travel, vlog">
+          <input type="text" id="vTags" placeholder="e.g. funny, travel, vlog">
         </div>
         <div class="field row-inline">
           <input type="checkbox" id="vFeatured" style="width:auto;">
-          <label style="margin:0;" for="vFeatured">Feature on Homepage Hero Section</label>
+          <label style="margin:0;" for="vFeatured">Feature in homepage hero section</label>
         </div>
         <div class="field row-inline">
           <input type="checkbox" id="vTrending" style="width:auto;">
-          <label style="margin:0;" for="vTrending">Force show in Trending Section</label>
+          <label style="margin:0;" for="vTrending">Force show in Trending section</label>
         </div>
         <div class="row-inline">
           <button class="btn-primary" id="saveVideoBtn">Save</button>
@@ -194,7 +187,7 @@
       <div class="card-box">
         <h2>All Videos</h2>
         <div class="vid-list" id="vidList"></div>
-        <div class="empty-hint" id="vidEmptyHint" style="display:none;">No videos added yet.</div>
+        <div class="empty-hint" id="vidEmptyHint" style="display:none;">No videos yet.</div>
       </div>
     </div>
 
@@ -221,7 +214,7 @@
           <input type="text" id="cDesc" placeholder="Short description">
         </div>
         <div class="field">
-          <label>Order — Lower number appears first</label>
+          <label>Order — Lower number shows first</label>
           <input type="number" id="cOrder" value="0">
         </div>
         <div class="row-inline">
@@ -230,10 +223,10 @@
         </div>
       </div>
 
-      <div class="card_box card-box">
+      <div class="card-box">
         <h2>All Categories</h2>
         <div id="catList2"></div>
-        <div class="empty-hint" id="catEmptyHint" style="display:none;">No categories added yet. Pages are still generated based on video category text.</div>
+        <div class="empty-hint" id="catEmptyHint" style="display:none;">No categories added yet. Even without adding here, pages will be created based on the category name written in the video, just without custom icon/color.</div>
       </div>
     </div>
 
@@ -242,10 +235,10 @@
       <div class="card-box">
         <h2>Site Identity</h2>
         <div class="field"><label>Site Name</label><input type="text" id="sSiteName" placeholder="GaiyumBlaze"></div>
-        <div class="field"><label>Hero Eyebrow (Small Label)</label><input type="text" id="sHeroEyebrow" placeholder="Watch Now"></div>
+        <div class="field"><label>Hero Eyebrow (small line)</label><input type="text" id="sHeroEyebrow" placeholder="Watch Now"></div>
         <div class="field"><label>Hero Title</label><input type="text" id="sHeroTitle" placeholder="GaiyumBlaze"></div>
         <div class="field"><label>Hero Description</label><textarea id="sHeroDesc" rows="2"></textarea></div>
-        <div class="field"><label>Hero Backdrop URL (leave blank for featured video thumbnail)</label><input type="text" id="sHeroBackdrop" placeholder="https://..."></div>
+        <div class="field"><label>Hero Backdrop Image URL (leave blank for featured video thumbnail)</label><input type="text" id="sHeroBackdrop" placeholder="https://..."></div>
       </div>
 
       <div class="card-box">
@@ -263,7 +256,7 @@
           <input type="checkbox" id="aEnabled" style="width:auto;">
           <label style="margin:0;" for="aEnabled">Show banner on homepage</label>
         </div>
-        <div class="field"><label>Text</label><input type="text" id="aText" placeholder="🔥 New video uploaded"></div>
+        <div class="field"><label>Text</label><input type="text" id="aText" placeholder="🔥 New video added"></div>
         <div class="grid2">
           <div class="field"><label>Link — Optional</label><input type="text" id="aLink" placeholder="https://..."></div>
           <div class="field"><label>Link Label — Optional</label><input type="text" id="aLinkLabel" placeholder="Watch →"></div>
@@ -272,7 +265,7 @@
 
       <div class="card-box">
         <h2>Homepage Sections</h2>
-        <p class="hint">Configure homepage sections, order, and titles.</p>
+        <p class="hint">Configure which sections appear on the homepage, their display order, and titles.</p>
         <div id="sectionsList"></div>
         <div class="add-sec-row">
           <select id="newSecType">
@@ -322,15 +315,6 @@ let sectionsState = [
   {id:'all', type:'all', title:'📺 All Videos', enabled:true}
 ];
 
-// ---------- Source Type Switcher ----------
-document.getElementById('vSourceType').addEventListener('change', e=>{
-  const isGdrive = e.target.value === 'gdrive';
-  document.getElementById('vLinkLabel').textContent = isGdrive ? 'Google Drive Link / File ID' : 'YouTube Link';
-  document.getElementById('vLink').placeholder = isGdrive
-    ? 'https://drive.google.com/file/d/FILE_ID/view or FILE_ID'
-    : 'https://youtube.com/watch?v=...';
-});
-
 // ---------- Auth ----------
 auth.onAuthStateChanged(user=>{
   if(user){
@@ -366,7 +350,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   };
 });
 
-// ---------- Toast & Helpers ----------
+// ---------- Toast ----------
 function toast(msg, type='ok'){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -378,13 +362,6 @@ function extractYouTubeId(url){
   const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
   return m ? m[1] : null;
 }
-function extractGDriveId(url){
-  if(!url) return null;
-  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if (match) return match[1];
-  if (/^[a-zA-Z0-9_-]{25,}$/.test(url.trim())) return url.trim();
-  return null;
-}
 function escapeHtml(s){
   return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -393,7 +370,6 @@ function escapeHtml(s){
    VIDEOS
 ===================================================== */
 document.getElementById('saveVideoBtn').onclick = async ()=>{
-  const sourceType = document.getElementById('vSourceType').value;
   const link = document.getElementById('vLink').value.trim();
   const title = document.getElementById('vTitle').value.trim();
   const category = document.getElementById('vCategory').value.trim();
@@ -404,29 +380,11 @@ document.getElementById('saveVideoBtn').onclick = async ()=>{
   const featured = document.getElementById('vFeatured').checked;
   const trending = document.getElementById('vTrending').checked;
 
-  let sourceId = null;
-  if(sourceType === 'gdrive'){
-    sourceId = extractGDriveId(link);
-    if(!sourceId){ toast('Provide a valid Google Drive link or file ID.','err'); return; }
-  } else {
-    sourceId = extractYouTubeId(link);
-    if(!sourceId){ toast('Provide a valid YouTube link.','err'); return; }
-  }
-  if(!title){ toast('Please enter a title.','err'); return; }
+  const ytId = extractYouTubeId(link);
+  if(!ytId){ toast('Please provide a valid YouTube link.','err'); return; }
+  if(!title){ toast('Please write a title.','err'); return; }
 
-  const data = {
-    sourceType,
-    sourceLink: link,
-    sourceId,
-    title,
-    category,
-    description,
-    thumbnail,
-    duration,
-    tags,
-    featured,
-    trending
-  };
+  const data = { youtubeLink: link, title, category, description, thumbnail, duration, tags, featured, trending };
 
   try{
     if(editingId){
@@ -447,8 +405,6 @@ document.getElementById('cancelEditBtn').onclick = resetForm;
 function resetForm(){
   editingId = null;
   document.getElementById('formTitle').textContent = 'Add New Video';
-  document.getElementById('vSourceType').value = 'youtube';
-  document.getElementById('vLinkLabel').textContent = 'YouTube Link';
   ['vLink','vTitle','vCategory','vDesc','vThumb','vDuration','vTags'].forEach(id=> document.getElementById(id).value='');
   document.getElementById('vFeatured').checked = false;
   document.getElementById('vTrending').checked = false;
@@ -464,11 +420,8 @@ function loadVideos(){
     document.getElementById('vidEmptyHint').style.display='none';
     snap.forEach(doc=>{
       const v = doc.data();
-      const ytId = v.sourceType === 'gdrive' ? null : (v.sourceId || extractYouTubeId(v.sourceLink));
-      const thumb = v.thumbnail && v.thumbnail.trim()
-        ? v.thumbnail
-        : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : 'https://placehold.co/96x56/1b1e24/ff5a1f?text=DRIVE');
-      const sourceBadge = v.sourceType === 'gdrive' ? '🟢 Google Drive' : '🔴 YouTube';
+      const ytId = extractYouTubeId(v.youtubeLink);
+      const thumb = v.thumbnail && v.thumbnail.trim() ? v.thumbnail : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '');
       const item = document.createElement('div');
       item.className = 'vid-item';
       item.innerHTML = `
@@ -476,7 +429,6 @@ function loadVideos(){
         <div class="meta">
           <h4>${escapeHtml(v.title)}</h4>
           <p>${escapeHtml(v.description||'')}</p>
-          <span class="tag">${sourceBadge}</span>
           ${v.category ? `<span class="tag">${escapeHtml(v.category)}</span>` : ''}
           ${v.featured ? `<span class="tag">★ Featured</span>` : ''}
           ${v.trending ? `<span class="tag">🔥 Trending</span>` : ''}
@@ -499,10 +451,7 @@ function startEdit(id){
     const v = doc.data();
     editingId = id;
     document.getElementById('formTitle').textContent = 'Edit Video';
-    const st = v.sourceType || 'youtube';
-    document.getElementById('vSourceType').value = st;
-    document.getElementById('vLinkLabel').textContent = st === 'gdrive' ? 'Google Drive Link / File ID' : 'YouTube Link';
-    document.getElementById('vLink').value = v.sourceLink || v.youtubeLink || '';
+    document.getElementById('vLink').value = v.youtubeLink || '';
     document.getElementById('vTitle').value = v.title || '';
     document.getElementById('vCategory').value = v.category || '';
     document.getElementById('vDesc').value = v.description || '';
@@ -531,7 +480,7 @@ document.getElementById('saveCatBtn').onclick = async ()=>{
   const color = document.getElementById('cColor').value;
   const description = document.getElementById('cDesc').value.trim();
   const order = parseInt(document.getElementById('cOrder').value) || 0;
-  if(!name){ toast('Enter category name.','err'); return; }
+  if(!name){ toast('Please provide a category name.','err'); return; }
 
   const data = { name, icon, color, description, order };
   try{
@@ -583,6 +532,7 @@ function loadCategories(){
       list.querySelectorAll('[data-cid]').forEach(btn=> btn.onclick = ()=> startCatEdit(btn.dataset.cid));
       list.querySelectorAll('[data-cdel]').forEach(btn=> btn.onclick = ()=> deleteCat(btn.dataset.cdel));
     }
+    // refresh datalist + category select for sections
     document.getElementById('catList').innerHTML = categoriesCache.map(c=>`<option value="${escapeHtml(c.name)}">`).join('');
     document.getElementById('newSecCategory').innerHTML = categoriesCache.map(c=>`<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
   });
@@ -602,7 +552,7 @@ function startCatEdit(id){
   document.getElementById('panel-categories').scrollIntoView({behavior:'smooth'});
 }
 function deleteCat(id){
-  if(!confirm('Delete this category? (Videos will not be deleted)')) return;
+  if(!confirm('Are you sure you want to delete this category? (Associated videos will not be deleted)')) return;
   db.collection('categories').doc(id).delete().then(()=>{ toast('Category deleted.'); loadCategories(); })
     .catch(err=> toast('Failed: '+err.message,'err'));
 }
