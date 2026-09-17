@@ -33,7 +33,7 @@
   /* ---------- Nav ---------- */
   header{
     position:fixed;top:0;left:0;right:0;z-index:100;
-    display:flex;align-items:center;justify-content:space-between;gap:18px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:16px 4vw;
     background:linear-gradient(to bottom, rgba(12,13,16,0.97), rgba(12,13,16,0));
     transition:background .3s;
@@ -46,11 +46,28 @@
   }
   .brand-dot{width:10px;height:10px;border-radius:2px;background:var(--blaze);display:inline-block;transform:rotate(45deg);flex:0 0 auto;}
   .brand span.txt{background:linear-gradient(90deg,var(--blaze),var(--blaze-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
-  nav{display:flex;align-items:center;gap:22px;flex:1;}
+  
+  .header-actions{
+    display:flex;align-items:center;gap:12px;
+  }
+
+  nav{display:flex;align-items:center;}
   nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0;}
   nav a{font-size:13.5px;font-weight:500;color:var(--text-dim);white-space:nowrap;}
   nav a:hover{color:var(--text);}
 
+  /* Menu Toggle Button (3 Dots) */
+  .menu-toggle{
+    display:none;
+    background:none;
+    border:none;
+    color:var(--text);
+    font-size:22px;
+    cursor:pointer;
+    padding:4px 8px;
+  }
+
+  /* Search Styles */
   .search-wrap{position:relative;flex:0 0 auto;width:min(38vw,260px);}
   .search-box{
     display:flex;align-items:center;gap:8px;
@@ -61,8 +78,19 @@
     background:none;border:none;outline:none;color:var(--text);font-family:inherit;font-size:13.5px;width:100%;
   }
   .search-box input::placeholder{color:var(--text-dim);}
+  
+  .search-icon-btn{
+    display:none;
+    background:none;
+    border:none;
+    color:var(--text);
+    font-size:18px;
+    cursor:pointer;
+    padding:6px;
+  }
+
   .search-dd{
-    position:absolute;top:calc(100% + 8px);left:0;right:0;
+    position:absolute;top:calc(100% + 8px);right:0;left:auto;width:300px;
     background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;
     overflow:hidden;display:none;max-height:70vh;overflow-y:auto;z-index:50;
     box-shadow:0 12px 32px rgba(0,0,0,0.5);
@@ -75,6 +103,46 @@
   .search-dd-item .c{font-size:11.5px;color:var(--text-dim);}
   .search-dd-empty{padding:16px;text-align:center;color:var(--text-dim);font-size:13px;}
   .search-dd-more{padding:10px 12px;text-align:center;font-size:12.5px;color:var(--blaze-2);cursor:pointer;border-top:1px solid var(--border);}
+
+  /* ---------- Mobile Responsive Adjustments ---------- */
+  @media(max-width:760px){
+    .menu-toggle{display:block;}
+    nav ul{
+      display:none;
+      position:absolute;
+      top:100%;
+      right:4vw;
+      background:var(--bg-elev);
+      border:1px solid var(--border);
+      border-radius:8px;
+      flex-direction:column;
+      padding:12px;
+      gap:12px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.5);
+    }
+    nav ul.active{display:flex;}
+    
+    /* Show only search icon on mobile */
+    .search-box input{display:none;}
+    .search-box{padding:6px 8px; background:none; border:none;}
+    .search-box.active input{
+      display:block;
+      position:absolute;
+      top:calc(100% + 8px);
+      right:0;
+      width:75vw;
+      background:var(--bg-elev);
+      border:1px solid var(--border);
+      padding:10px;
+      border-radius:6px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.5);
+    }
+    .search-wrap{width:auto;}
+    .search-dd{width:75vw;}
+
+    .hero{padding:0 5vw 44px;height:70vh;}
+    .row{padding:0 5vw;}
+  }
 
   /* ---------- Announcement ---------- */
   .announce{
@@ -203,32 +271,32 @@
   .related-title{font-size:17px;margin-bottom:14px;}
 
   footer{padding:40px 4vw;color:var(--text-dim);font-size:13px;border-top:1px solid var(--border);}
-
-  @media(max-width:760px){
-    nav ul{display:none;}
-    .search-wrap{width:auto;flex:1;}
-    .hero{padding:0 5vw 44px;height:70vh;}
-    .row{padding:0 5vw;}
-  }
 </style>
 </head>
 <body>
 
 <header id="siteHeader">
   <div class="brand" id="brandLink"><span class="brand-dot"></span><span class="txt" id="brandName">GaiyumBlaze</span></div>
-  <nav>
-    <ul>
-      <li><a href="#/">Home</a></li>
-      <li><a href="#/categories">Categories</a></li>
-    </ul>
+  
+  <div class="header-actions">
+    <!-- Search -->
     <div class="search-wrap">
-      <div class="search-box">
-        <span>🔍</span>
+      <div class="search-box" id="searchBox">
+        <span style="cursor:pointer;" id="searchBtnIcon">🔍</span>
         <input type="text" id="searchInput" placeholder="Search videos...">
       </div>
       <div class="search-dd" id="searchDD"></div>
     </div>
-  </nav>
+
+    <!-- 3-Dots Navigation Menu -->
+    <nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">⋮</button>
+      <ul id="navMenu">
+        <li><a href="#/">Home</a></li>
+        <li><a href="#/categories">Categories</a></li>
+      </ul>
+    </nav>
+  </div>
 </header>
 
 <div id="root"></div>
@@ -253,13 +321,42 @@ const db = firebase.firestore();
 document.getElementById('year').textContent = new Date().getFullYear();
 document.getElementById('brandLink').onclick = ()=> location.hash = '#/';
 
+/* ---------- 3-Dots Menu & Search Toggle Script ---------- */
+const menuToggle = document.getElementById('menuToggle');
+const navMenu = document.getElementById('navMenu');
+const searchBox = document.getElementById('searchBox');
+const searchBtnIcon = document.getElementById('searchBtnIcon');
+const searchInput = document.getElementById('searchInput');
+
+menuToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  navMenu.classList.toggle('active');
+  searchBox.classList.remove('active');
+});
+
+searchBtnIcon.addEventListener('click', (e) => {
+  if (window.innerWidth <= 760) {
+    e.stopPropagation();
+    searchBox.classList.toggle('active');
+    navMenu.classList.remove('active');
+    if (searchBox.classList.contains('active')) {
+      searchInput.focus();
+    }
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('nav')) navMenu.classList.remove('active');
+  if (!e.target.closest('.search-wrap')) searchBox.classList.remove('active');
+});
+
 let allVideos = [];
 let allCategories = [];
 let siteSettings = {};
 let dataReady = false;
 
 const DEFAULT_SECTIONS = [
-  {id:'trending', type:'trending', title:'🔴 Trending Now', enabled:true},
+  {id:'trending', type:'trending', title:'🔥 Trending Now', enabled:true},
   {id:'featured', type:'featured', title:'⭐ Featured', enabled:true},
   {id:'new', type:'new', title:'🆕 Recently Added', enabled:true},
   {id:'all', type:'all', title:'📺 All Videos', enabled:true}
@@ -282,13 +379,12 @@ function isNew(v){
   const days = (Date.now() - v.createdAt.toDate().getTime()) / 86400000;
   return days <= 7;
 }
-function cssSafe(s){return (s||'').replace(/[^a-zA-Z0-9]/g,'-');}
 
 function cardHtml(v){
   const thumb = thumbOf(v);
   let badges = '';
   if(isNew(v)) badges += '<span class="badge new">NEW</span>';
-  if(v.trending) badges += '<span class="badge trend">🔴 TRENDING</span>';
+  if(v.trending) badges += '<span class="badge trend">🔥 TRENDING</span>';
   return `
     <div class="card" data-id="${v.id}">
       <img src="${thumb}" alt="${escapeHtml(v.title)}" loading="lazy">
@@ -343,6 +439,9 @@ function router(){
   const hash = location.hash || '#/';
   window.scrollTo(0,0);
   closeSearchDD();
+  navMenu.classList.remove('active');
+  searchBox.classList.remove('active');
+
   if(hash.startsWith('#/watch/')) renderWatch(decodeURIComponent(hash.slice(8)));
   else if(hash.startsWith('#/category/')) renderCategoryVideos(decodeURIComponent(hash.slice(11)));
   else if(hash === '#/categories') renderCategoriesPage();
@@ -417,7 +516,7 @@ function getVideosForSection(sec){
   if(sec.type === 'featured') return allVideos.filter(v=>v.featured).slice(0,12);
   if(sec.type === 'new') return [...allVideos].sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).slice(0,12);
   if(sec.type === 'category') return allVideos.filter(v=>(v.category||'').trim() === (sec.categoryName||'').trim());
-  return allVideos; // 'all'
+  return allVideos;
 }
 
 // ---------- Categories page ----------
@@ -429,7 +528,6 @@ function renderCategoriesPage(){
     seen.add(c.name.trim());
     cards.push(c);
   });
-  // auto-detect categories used in videos but not defined
   allVideos.forEach(v=>{
     const cat = (v.category||'').trim();
     if(cat && !seen.has(cat)){ seen.add(cat); cards.push({name:cat, icon:'🎬', color:'#1b1e24'}); }
@@ -541,14 +639,12 @@ function renderWatch(id){
   };
   bindCards(root);
 
-  // increment view count (allowed by security rules: public may update only 'views')
   db.collection('videos').doc(v.id).update({
     views: firebase.firestore.FieldValue.increment(1)
   }).then(()=>{ v.views = (v.views||0)+1; }).catch(()=>{});
 }
 
 // ---------- Search box behavior ----------
-const searchInput = document.getElementById('searchInput');
 const searchDD = document.getElementById('searchDD');
 searchInput.addEventListener('input', ()=>{
   const q = searchInput.value.trim();
@@ -564,7 +660,7 @@ searchInput.addEventListener('input', ()=>{
       </div>
     `).join('') + `<div class="search-dd-more" id="ddMore">See all results →</div>`;
     searchDD.querySelectorAll('.search-dd-item').forEach(el=>{
-      el.onclick = ()=>{ location.hash = '#/watch/'+el.dataset.id; searchInput.value=''; closeSearchDD(); };
+      el.onclick = ()=>{ location.hash = '#/watch/'+el.dataset.id; searchInput.value=''; closeSearchDD(); searchBox.classList.remove('active'); };
     });
     document.getElementById('ddMore').onclick = ()=>{ goSearch(q); };
   }
@@ -577,11 +673,9 @@ function goSearch(q){
   if(!q) return;
   location.hash = '#/search?q=' + encodeURIComponent(q);
   closeSearchDD();
+  searchBox.classList.remove('active');
 }
 function closeSearchDD(){ searchDD.classList.remove('open'); }
-document.addEventListener('click', e=>{
-  if(!e.target.closest('.search-wrap')) closeSearchDD();
-});
 
 window.addEventListener('scroll', ()=>{
   document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 30);
