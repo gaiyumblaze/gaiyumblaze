@@ -174,7 +174,21 @@
     font-size:clamp(32px,6vw,60px);
     line-height:1.02;margin:0 0 16px;
   }
-  .hero-desc{font-size:15.5px;line-height:1.6;color:var(--text-dim);max-width:520px;margin:0 0 26px;}
+
+  /* Description Clamp (Max 3 lines) */
+  .hero-desc{
+    font-size:15.5px;
+    line-height:1.6;
+    color:var(--text-dim);
+    max-width:520px;
+    margin:0 0 26px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* ৩ লাইন দেখাবে */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .hero-btns{display:flex;gap:14px;}
   .btn{
     border:none;border-radius:6px;padding:13px 26px;font-size:15px;font-weight:600;
