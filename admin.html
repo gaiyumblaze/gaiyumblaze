@@ -1,185 +1,448 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GaiyumBlaze - Admin Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-    body { background: #0f0f12; color: #fff; padding: 20px; }
-    .container { max-width: 1000px; margin: 0 auto; }
-    h1, h2 { margin-bottom: 20px; color: #e50914; }
-    .card { background: #18181c; padding: 25px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #282830; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 8px; font-weight: 600; color: #ccc; }
-    input, textarea, select { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #09090b; color: #fff; font-size: 14px; }
-    input[type="checkbox"] { width: auto; display: inline-block; }
-    button { background: #e50914; color: white; border: none; padding: 12px 25px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s; }
-    button:hover { background: #b80710; }
-    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-    .video-card { background: #222228; border-radius: 8px; overflow: hidden; position: relative; }
-    .video-card img { width: 100%; height: 130px; object-fit: cover; }
-    .video-card-body { padding: 12px; }
-    .video-card-title { font-size: 14px; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .delete-btn { background: #ff3333; padding: 6px 12px; font-size: 12px; margin-top: 10px; width: 100%; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GaiyumBlaze — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0d10; --bg-elev:#16181d; --bg-card:#1b1e24;
+    --blaze:#ff5a1f; --blaze-2:#ffb000;
+    --text:#f3f1ea; --text-dim:#9a9a9e; --border:rgba(255,255,255,0.09);
+    --danger:#ff4d4f; --ok:#2ecc71;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+  h1,h2,h3{font-family:'Archivo Black',sans-serif;font-weight:400;margin:0;}
+  input,textarea,select{
+    width:100%;padding:11px 13px;border-radius:6px;border:1px solid var(--border);
+    background:var(--bg-elev);color:var(--text);font-family:inherit;font-size:14px;
+  }
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blaze);}
+  label{font-size:13px;color:var(--text-dim);margin-bottom:6px;display:block;}
+  .field{margin-bottom:14px;}
+  button{
+    cursor:pointer;border:none;border-radius:6px;font-family:inherit;font-weight:600;font-size:14px;padding:11px 20px;
+  }
+  .btn-primary{background:var(--blaze);color:#fff;}
+  .btn-primary:hover{background:#e64e15;}
+  .btn-secondary{background:rgba(255,255,255,0.1);color:var(--text);}
+  .btn-secondary:hover{background:rgba(255,255,255,0.18);}
+  .btn-danger{background:transparent;color:var(--danger);border:1px solid rgba(255,77,79,0.4);padding:7px 14px;font-size:13px;}
+  .btn-danger:hover{background:rgba(255,77,79,0.1);}
+  .btn-edit{background:transparent;color:var(--text-dim);border:1px solid var(--border);padding:7px 14px;font-size:13px;}
+  .btn-edit:hover{color:var(--text);border-color:var(--text-dim);}
+
+  /* ---------- Login screen ---------- */
+  #loginScreen{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .login-box{
+    width:100%;max-width:380px;background:var(--bg-elev);border:1px solid var(--border);
+    border-radius:10px;padding:36px 30px;
+  }
+  .login-box .brand{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .brand-dot{width:9px;height:9px;background:var(--blaze);display:inline-block;transform:rotate(45deg);border-radius:2px;}
+  .login-box h1{font-size:20px;}
+  .login-sub{color:var(--text-dim);font-size:13.5px;margin:6px 0 24px;}
+  #loginError{color:var(--danger);font-size:13px;margin-top:10px;min-height:16px;}
+  .login-box button{width:100%;margin-top:6px;}
+
+  /* ---------- App shell ---------- */
+  #app{display:none;}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 4vw;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;
+  }
+  .topbar .brand{display:flex;align-items:center;gap:8px;font-size:17px;}
+  .tabs{display:flex;gap:6px;}
+  .tab-btn{background:transparent;color:var(--text-dim);padding:9px 16px;border-radius:6px;font-size:13.5px;}
+  .tab-btn.active{background:var(--bg-elev);color:var(--text);}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 4vw 80px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .card-box{background:var(--bg-elev);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:24px;}
+  .card-box h2{font-size:16px;margin-bottom:18px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+  .row-inline{display:flex;gap:10px;align-items:center;}
+  .color-input{height:44px;padding:4px;cursor:pointer;}
+
+  .vid-list{display:flex;flex-direction:column;gap:10px;}
+  .vid-item{
+    display:flex;gap:14px;align-items:center;background:var(--bg-card);border:1px solid var(--border);
+    border-radius:8px;padding:10px;
+  }
+  .vid-item img{width:96px;height:56px;object-fit:cover;border-radius:5px;flex:0 0 auto;background:#000;}
+  .vid-item .meta{flex:1;min-width:0;}
+  .vid-item .meta h4{font-size:14px;margin:0 0 3px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .vid-item .meta p{font-size:12.5px;color:var(--text-dim);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .vid-item .tag{display:inline-block;font-size:11px;color:var(--blaze-2);margin-top:3px;}
+  .vid-actions{display:flex;gap:8px;flex:0 0 auto;}
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    background:var(--bg-elev);border:1px solid var(--border);color:var(--text);
+    padding:12px 20px;border-radius:8px;font-size:13.5px;z-index:999;
+    opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px);}
+  .toast.ok{border-color:rgba(46,204,113,0.4);}
+  .toast.err{border-color:rgba(255,77,79,0.4);}
+  .empty-hint{color:var(--text-dim);font-size:13.5px;text-align:center;padding:30px 0;}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>GaiyumBlaze Control Panel</h1>
 
-    <!-- Design Control -->
-    <div class="card">
-      <h2>Theme & Design Settings</h2>
-      <div class="form-group">
-        <label>Primary Brand Accent Color</label>
-        <input type="color" id="primaryColor" value="#e50914" style="height: 45px; cursor: pointer;">
-      </div>
-      <button onclick="saveTheme()">Save Theme</button>
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="brand"><span class="brand-dot"></span><strong>GaiyumBlaze</strong></div>
+    <h1>Admin Panel</h1>
+    <p class="login-sub">চালিয়ে যেতে সাইন ইন করুন।</p>
+    <div class="field">
+      <label>ইমেইল</label>
+      <input type="email" id="loginEmail" placeholder="admin@example.com">
     </div>
+    <div class="field">
+      <label>পাসওয়ার্ড</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+    </div>
+    <button class="btn-primary" id="loginBtn">সাইন ইন</button>
+    <div id="loginError"></div>
+  </div>
+</div>
 
-    <!-- Video Upload Form -->
-    <div class="card">
-      <h2>Add New Content</h2>
-      <form id="uploadForm">
-        <div class="form-group">
-          <label>Video Title</label>
-          <input type="text" id="title" placeholder="e.g. Action Scene #1" required>
-        </div>
-        <div class="form-group">
-          <label>YouTube Video Link or ID</label>
-          <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" required>
-        </div>
-        <div class="form-group">
-          <label>Custom Thumbnail URL (Optional - leaves blank to use YouTube thumbnail)</label>
-          <input type="url" id="thumbnail" placeholder="https://example.com/image.jpg">
-        </div>
-        <div class="form-group">
-          <label>Category</label>
-          <select id="category">
-            <option value="Trending Now">Trending Now</option>
-            <option value="Action & Adventure">Action & Adventure</option>
-            <option value="Popular Uploads">Popular Uploads</option>
-            <option value="Exclusive">Exclusive</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="description" rows="3" placeholder="Enter video description..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="isBanner"> Set as Featured Hero Banner
-          </label>
-        </div>
-        <button type="submit">Publish Content</button>
-      </form>
+<!-- ============ APP ============ -->
+<div id="app">
+  <div class="topbar">
+    <div class="brand"><span class="brand-dot"></span><strong>GaiyumBlaze Admin</strong></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="videos">ভিডিও</button>
+      <button class="tab-btn" data-tab="design">ডিজাইন</button>
     </div>
-
-    <!-- Video List -->
-    <div class="card">
-      <h2>Uploaded Videos</h2>
-      <div class="video-grid" id="adminVideoGrid">
-        <p>Loading videos...</p>
-      </div>
-    </div>
+    <button class="btn-secondary" id="logoutBtn">লগ আউট</button>
   </div>
 
-  <!-- Firebase Scripts -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <div class="wrap">
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyD0jyJo7j3iU4CeUGsuxqZa6RCYe28s-JQ",
-      authDomain: "gaiyumblaze-auth.firebaseapp.com",
-      projectId: "gaiyumblaze-auth",
-      storageBucket: "gaiyumblaze-auth.firebasestorage.app",
-      messagingSenderId: "723612584485",
-      appId: "1:723612584485:web:4ce26adcbfa9fdc66bcdcc"
-    };
+    <!-- VIDEOS PANEL -->
+    <div class="panel active" id="panel-videos">
+      <div class="card-box">
+        <h2 id="formTitle">নতুন ভিডিও যোগ করুন</h2>
+        <div class="field">
+          <label>YouTube লিংক</label>
+          <input type="text" id="vLink" placeholder="https://youtube.com/watch?v=...">
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label>শিরোনাম (Title)</label>
+            <input type="text" id="vTitle" placeholder="ভিডিওর নাম">
+          </div>
+          <div class="field">
+            <label>ক্যাটাগরি</label>
+            <input type="text" id="vCategory" placeholder="যেমন: Vlog, Music, Tutorial">
+          </div>
+        </div>
+        <div class="field">
+          <label>বর্ণনা (Description)</label>
+          <textarea id="vDesc" rows="3" placeholder="সংক্ষিপ্ত বিবরণ"></textarea>
+        </div>
+        <div class="field">
+          <label>Thumbnail URL (খালি রাখলে YouTube থাম্বনেইল ব্যবহার হবে)</label>
+          <input type="text" id="vThumb" placeholder="https://...">
+        </div>
+        <div class="field row-inline">
+          <input type="checkbox" id="vFeatured" style="width:auto;">
+          <label style="margin:0;" for="vFeatured">হোমপেজের হিরো সেকশনে ফিচার করুন</label>
+        </div>
+        <div class="row-inline">
+          <button class="btn-primary" id="saveVideoBtn">সংরক্ষণ করুন</button>
+          <button class="btn-secondary" id="cancelEditBtn" style="display:none;">বাতিল</button>
+        </div>
+      </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+      <div class="card-box">
+        <h2>সব ভিডিও</h2>
+        <div class="vid-list" id="vidList"></div>
+        <div class="empty-hint" id="vidEmptyHint" style="display:none;">এখনো কোনো ভিডিও নেই।</div>
+      </div>
+    </div>
 
-    // Extract YouTube ID
-    function getYoutubeId(url) {
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      const match = url.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : url;
-    }
+    <!-- DESIGN PANEL -->
+    <div class="panel" id="panel-design">
+      <div class="card-box">
+        <h2>সাইট পরিচিতি</h2>
+        <div class="field">
+          <label>সাইটের নাম</label>
+          <input type="text" id="sSiteName" placeholder="GaiyumBlaze">
+        </div>
+        <div class="field">
+          <label>Hero Eyebrow (ছোট লাইন)</label>
+          <input type="text" id="sHeroEyebrow" placeholder="এখন দেখুন">
+        </div>
+        <div class="field">
+          <label>Hero শিরোনাম</label>
+          <input type="text" id="sHeroTitle" placeholder="GaiyumBlaze">
+        </div>
+        <div class="field">
+          <label>Hero বর্ণনা</label>
+          <textarea id="sHeroDesc" rows="2"></textarea>
+        </div>
+        <div class="field">
+          <label>Hero ব্যাকড্রপ ছবির URL (খালি রাখলে ফিচার্ড ভিডিওর থাম্বনেইল ব্যবহার হবে)</label>
+          <input type="text" id="sHeroBackdrop" placeholder="https://...">
+        </div>
+      </div>
 
-    // Load Theme Settings
-    async function loadSettings() {
-      const docRef = doc(db, "settings", "theme");
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        document.getElementById('primaryColor').value = docSnap.data().primaryColor || '#e50914';
-      }
-    }
+      <div class="card-box">
+        <h2>রঙ (Theme Colors)</h2>
+        <div class="grid2">
+          <div class="field">
+            <label>Background</label>
+            <input type="color" class="color-input" id="sBg" value="#0c0d10">
+          </div>
+          <div class="field">
+            <label>Primary Accent (Blaze)</label>
+            <input type="color" class="color-input" id="sBlaze" value="#ff5a1f">
+          </div>
+          <div class="field">
+            <label>Secondary Accent</label>
+            <input type="color" class="color-input" id="sBlaze2" value="#ffb000">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="saveSettingsBtn">ডিজাইন সংরক্ষণ করুন</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyACv-REEfAnj4PW6jV3Qpx9CQ0gLZjmJB0",
+  authDomain: "gaiyumblazeofficial.firebaseapp.com",
+  projectId: "gaiyumblazeofficial",
+  storageBucket: "gaiyumblazeofficial.firebasestorage.app",
+  messagingSenderId: "814290482451",
+  appId: "1:814290482451:web:6a1f404836563ebff3d6e6",
+  measurementId: "G-TH3NEHSE2L"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let editingId = null;
+
+// ---------- Auth ----------
+auth.onAuthStateChanged(user=>{
+  if(user){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    loadVideos();
     loadSettings();
+  } else {
+    document.getElementById('loginScreen').style.display='flex';
+    document.getElementById('app').style.display='none';
+  }
+});
 
-    // Save Theme
-    window.saveTheme = async function() {
-      const color = document.getElementById('primaryColor').value;
-      await setDoc(doc(db, "settings", "theme"), { primaryColor: color });
-      alert("Theme saved successfully!");
-    };
+document.getElementById('loginBtn').onclick = ()=>{
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  document.getElementById('loginError').textContent = '';
+  auth.signInWithEmailAndPassword(email, pass).catch(err=>{
+    document.getElementById('loginError').textContent = 'লগইন ব্যর্থ: ইমেইল বা পাসওয়ার্ড ভুল।';
+  });
+};
+document.getElementById('logoutBtn').onclick = ()=> auth.signOut();
 
-    // Form Submit
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const rawUrl = document.getElementById('youtubeUrl').value;
-      const videoId = getYoutubeId(rawUrl);
-      const customThumb = document.getElementById('thumbnail').value;
+// enter-key login
+document.getElementById('loginPass').addEventListener('keydown', e=>{
+  if(e.key==='Enter') document.getElementById('loginBtn').click();
+});
 
-      const videoData = {
-        title: document.getElementById('title').value,
-        youtubeId: videoId,
-        thumbnail: customThumb || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-        category: document.getElementById('category').value,
-        description: document.getElementById('description').value,
-        isBanner: document.getElementById('isBanner').checked,
-        createdAt: new Date().getTime()
-      };
+// ---------- Tabs ----------
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  };
+});
 
-      await addDoc(collection(db, "videos"), videoData);
-      alert("Content uploaded successfully!");
-      document.getElementById('uploadForm').reset();
-      loadVideos();
+// ---------- Toast ----------
+function toast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(()=> t.className = 'toast '+type, 2200);
+}
+
+function extractYouTubeId(url){
+  if(!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ---------- Videos: save / edit / delete ----------
+document.getElementById('saveVideoBtn').onclick = async ()=>{
+  const link = document.getElementById('vLink').value.trim();
+  const title = document.getElementById('vTitle').value.trim();
+  const category = document.getElementById('vCategory').value.trim();
+  const description = document.getElementById('vDesc').value.trim();
+  const thumbnail = document.getElementById('vThumb').value.trim();
+  const featured = document.getElementById('vFeatured').checked;
+
+  const ytId = extractYouTubeId(link);
+  if(!ytId){ toast('সঠিক YouTube লিংক দিন।','err'); return; }
+  if(!title){ toast('শিরোনাম লিখুন।','err'); return; }
+
+  const data = {
+    youtubeLink: link, title, category, description, thumbnail, featured,
+  };
+
+  try{
+    if(editingId){
+      await db.collection('videos').doc(editingId).update(data);
+      toast('ভিডিও আপডেট হয়েছে।');
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('videos').add(data);
+      toast('ভিডিও যোগ হয়েছে।');
+    }
+    resetForm();
+    loadVideos();
+  }catch(err){
+    toast('সমস্যা হয়েছে: '+err.message, 'err');
+  }
+};
+
+document.getElementById('cancelEditBtn').onclick = resetForm;
+
+function resetForm(){
+  editingId = null;
+  document.getElementById('formTitle').textContent = 'নতুন ভিডিও যোগ করুন';
+  document.getElementById('vLink').value = '';
+  document.getElementById('vTitle').value = '';
+  document.getElementById('vCategory').value = '';
+  document.getElementById('vDesc').value = '';
+  document.getElementById('vThumb').value = '';
+  document.getElementById('vFeatured').checked = false;
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('saveVideoBtn').textContent = 'সংরক্ষণ করুন';
+}
+
+function loadVideos(){
+  db.collection('videos').orderBy('createdAt','desc').get().then(snap=>{
+    const list = document.getElementById('vidList');
+    list.innerHTML = '';
+    if(snap.empty){
+      document.getElementById('vidEmptyHint').style.display='block';
+      return;
+    }
+    document.getElementById('vidEmptyHint').style.display='none';
+    snap.forEach(doc=>{
+      const v = doc.data();
+      const ytId = extractYouTubeId(v.youtubeLink);
+      const thumb = v.thumbnail && v.thumbnail.trim() ? v.thumbnail : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '');
+      const item = document.createElement('div');
+      item.className = 'vid-item';
+      item.innerHTML = `
+        <img src="${thumb}" alt="">
+        <div class="meta">
+          <h4>${escapeHtml(v.title)}</h4>
+          <p>${escapeHtml(v.description||'')}</p>
+          ${v.category ? `<span class="tag">${escapeHtml(v.category)}</span>` : ''}
+          ${v.featured ? `<span class="tag">★ ফিচার্ড</span>` : ''}
+        </div>
+        <div class="vid-actions">
+          <button class="btn-edit" data-id="${doc.id}">এডিট</button>
+          <button class="btn-danger" data-del="${doc.id}">ডিলিট</button>
+        </div>
+      `;
+      list.appendChild(item);
     });
 
-    // Load All Videos
-    async function loadVideos() {
-      const querySnapshot = await getDocs(collection(db, "videos"));
-      const grid = document.getElementById('adminVideoGrid');
-      grid.innerHTML = '';
+    list.querySelectorAll('[data-id]').forEach(btn=>{
+      btn.onclick = ()=> startEdit(btn.dataset.id);
+    });
+    list.querySelectorAll('[data-del]').forEach(btn=>{
+      btn.onclick = ()=> deleteVideo(btn.dataset.del);
+    });
+  });
+}
 
-      querySnapshot.forEach((docSnap) => {
-        const item = docSnap.data();
-        const card = document.createElement('div');
-        card.className = 'video-card';
-        card.innerHTML = `
-          <img src="${item.thumbnail}" alt="thumb">
-          <div class="video-card-body">
-            <div class="video-card-title">${item.title}</div>
-            <small>${item.category}</small>
-            <button class="delete-btn" onclick="deleteVideo('${docSnap.id}')">Delete</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
+function startEdit(id){
+  db.collection('videos').doc(id).get().then(doc=>{
+    if(!doc.exists) return;
+    const v = doc.data();
+    editingId = id;
+    document.getElementById('formTitle').textContent = 'ভিডিও এডিট করুন';
+    document.getElementById('vLink').value = v.youtubeLink || '';
+    document.getElementById('vTitle').value = v.title || '';
+    document.getElementById('vCategory').value = v.category || '';
+    document.getElementById('vDesc').value = v.description || '';
+    document.getElementById('vThumb').value = v.thumbnail || '';
+    document.getElementById('vFeatured').checked = !!v.featured;
+    document.getElementById('cancelEditBtn').style.display = 'inline-block';
+    document.getElementById('saveVideoBtn').textContent = 'আপডেট করুন';
+    document.getElementById('panel-videos').scrollIntoView({behavior:'smooth'});
+  });
+}
 
-    window.deleteVideo = async function(id) {
-      if (confirm("Are you sure you want to delete this video?")) {
-        await deleteDoc(doc(db, "videos", id));
-        loadVideos();
-      }
-    };
-
+function deleteVideo(id){
+  if(!confirm('এই ভিডিওটি ডিলিট করতে চান?')) return;
+  db.collection('videos').doc(id).delete().then(()=>{
+    toast('ভিডিও ডিলিট হয়েছে।');
     loadVideos();
-  </script>
+  }).catch(err=> toast('ডিলিট ব্যর্থ: '+err.message,'err'));
+}
+
+// ---------- Design settings ----------
+function loadSettings(){
+  db.collection('settings').doc('site').get().then(doc=>{
+    if(!doc.exists) return;
+    const s = doc.data();
+    if(s.siteName) document.getElementById('sSiteName').value = s.siteName;
+    if(s.heroEyebrow) document.getElementById('sHeroEyebrow').value = s.heroEyebrow;
+    if(s.heroTitle) document.getElementById('sHeroTitle').value = s.heroTitle;
+    if(s.heroDesc) document.getElementById('sHeroDesc').value = s.heroDesc;
+    if(s.heroBackdrop) document.getElementById('sHeroBackdrop').value = s.heroBackdrop;
+    if(s.bgColor) document.getElementById('sBg').value = s.bgColor;
+    if(s.blazeColor) document.getElementById('sBlaze').value = s.blazeColor;
+    if(s.blaze2Color) document.getElementById('sBlaze2').value = s.blaze2Color;
+  });
+}
+
+document.getElementById('saveSettingsBtn').onclick = ()=>{
+  const data = {
+    siteName: document.getElementById('sSiteName').value.trim(),
+    heroEyebrow: document.getElementById('sHeroEyebrow').value.trim(),
+    heroTitle: document.getElementById('sHeroTitle').value.trim(),
+    heroDesc: document.getElementById('sHeroDesc').value.trim(),
+    heroBackdrop: document.getElementById('sHeroBackdrop').value.trim(),
+    bgColor: document.getElementById('sBg').value,
+    blazeColor: document.getElementById('sBlaze').value,
+    blaze2Color: document.getElementById('sBlaze2').value,
+  };
+  db.collection('settings').doc('site').set(data, {merge:true}).then(()=>{
+    toast('ডিজাইন সংরক্ষণ হয়েছে।');
+  }).catch(err=> toast('সমস্যা: '+err.message,'err'));
+};
+</script>
 </body>
 </html>
