@@ -235,13 +235,6 @@
     box-shadow:0 12px 32px rgba(0,0,0,0.5);
   }
   .search-dd.open{display:block;}
-  .search-dd-item{display:flex;gap:10px;padding:9px 12px;align-items:center;cursor:pointer;}
-  .search-dd-item:hover{background:rgba(255,255,255,0.06);}
-  .search-dd-item img{width:64px;height:36px;object-fit:cover;border-radius:4px;background:#000;flex:0 0 auto;}
-  .search-dd-item .t{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .search-dd-item .c{font-size:11.5px;color:var(--text-dim);}
-  .search-dd-empty{padding:16px;text-align:center;color:var(--text-dim);font-size:13px;}
-  .search-dd-more{padding:10px 12px;text-align:center;font-size:12.5px;color:var(--blaze-2);cursor:pointer;border-top:1px solid var(--border);}
 
   /* ---------- Category Filter Chips ---------- */
   .chips-row{
@@ -307,7 +300,6 @@
     font-size:clamp(32px,6vw,60px);
     line-height:1.02;margin:0 0 16px;
   }
-
   .hero-desc{
     font-size:15.5px;
     line-height:1.6;
@@ -320,7 +312,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
   .hero-btns{display:flex;gap:14px;}
   .btn{
     border:none;border-radius:6px;padding:13px 26px;font-size:15px;font-weight:600;
@@ -391,7 +382,6 @@
   }
   .bookmark-btn.saved{background:var(--blaze);border-color:transparent;}
 
-  /* YouTube Style Home Video Title */
   .video-item-title {
     font-size: 13.5px;
     font-weight: 600;
@@ -424,7 +414,6 @@
   .cat-card .name{font-size:15.5px;font-weight:700;}
   .cat-card .desc{font-size:12.5px;color:var(--text-dim);line-height:1.5;}
 
-  /* Sort select (search page) */
   .sort-select{
     background:var(--bg-elev);border:1px solid var(--border);color:var(--text);
     padding:9px 14px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;
@@ -444,7 +433,6 @@
   .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);font-size:13.5px;margin-bottom:18px;cursor:pointer;}
   .back-link:hover{color:var(--text);}
 
-  /* Player Container with Overlay Fullscreen Icon */
   .player-frame-container{
     position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;
   }
@@ -452,7 +440,6 @@
   .player-frame iframe{width:100%;height:100%;border:0;}
   #playerPlaceholder{width:100%;aspect-ratio:16/9;}
 
-  /* In-Player Fullscreen Overlay Button */
   .player-fullscreen-icon {
     position: absolute;
     bottom: 12px;
@@ -478,34 +465,34 @@
     transform: scale(1.08);
   }
 
-  /* Mini / Theater Draggable Picture-in-Picture floating player */
+  /* Draggable Mini / Theater floating player */
   .player-frame-container.mini-mode{
-    position:fixed;bottom:20px;right:20px;width:min(320px,86vw);aspect-ratio:16/9;
-    z-index:500;box-shadow:0 14px 36px rgba(0,0,0,0.6);border:1px solid var(--border);
-    animation:miniIn .2s ease;
-    cursor: move;
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:min(320px,86vw);
+    aspect-ratio:16/9;
+    z-index:9999;
+    box-shadow:0 14px 36px rgba(0,0,0,0.7);
+    border:1.5px solid var(--blaze);
+    border-radius:8px;
+    cursor:grab;
+    touch-action: none;
   }
-  .pip-header {
-    display: none;
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 30px;
-    background: rgba(0,0,0,0.6);
-    z-index: 12;
-    cursor: move;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 8px;
-    color: #fff;
-    font-size: 11px;
+  .player-frame-container.mini-mode:active { cursor:grabbing; }
+  .mini-drag-handle {
+    position:absolute;top:0;left:0;right:0;height:24px;
+    background:linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    z-index:12;display:none;align-items:center;justify-content:center;
+    color:#fff;font-size:10px;letter-spacing:1px;font-weight:600;
   }
-  .player-frame-container.mini-mode .pip-header { display: flex; }
-
-  @keyframes miniIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+  .player-frame-container.mini-mode .mini-drag-handle { display:flex; }
   .mini-close-btn{
-    width:20px;height:20px;border-radius:4px;
-    background:rgba(255,255,255,0.2);color:#fff;border:none;font-size:13px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
+    position:absolute;top:4px;right:6px;z-index:15;width:22px;height:22px;border-radius:50%;
+    background:rgba(0,0,0,0.8);color:#fff;border:none;font-size:12px;cursor:pointer;display:none;
+    align-items:center;justify-content:center;
   }
+  .player-frame-container.mini-mode .mini-close-btn{display:flex;}
   .player-frame-container.mini-mode .player-fullscreen-icon{display:none;}
 
   .watch-meta{padding:20px 2px 0;}
@@ -531,7 +518,7 @@
   }
   .share-dd button:hover{background:rgba(255,255,255,0.08);}
 
-  /* Expandable Description Box (YouTube Style) */
+  /* Expandable Description Box */
   .watch-desc-box {
     background: var(--bg-elev);
     border: 1px solid var(--border);
@@ -559,22 +546,31 @@
   .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;}
   .tag-chip{font-size:12px;color:var(--blaze-2);background:rgba(255,176,0,0.1);border:1px solid rgba(255,176,0,0.25);padding:4px 10px;border-radius:14px;}
 
-  /* Comments Section Style (YouTube Style) */
+  /* Comments Toggle Bar & Interactive Drawer/List */
+  .comments-toggle-bar {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: border-color .2s;
+  }
+  .comments-toggle-bar:hover { border-color: var(--blaze); }
+  .comments-toggle-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .comments-toggle-count { color: var(--text-dim); font-size: 13.5px; }
+
   .comments-section {
-    margin-top: 30px;
+    display: none;
+    margin-top: 20px;
     margin-bottom: 40px;
     border-top: 1px solid var(--border);
     padding-top: 24px;
   }
-  .comments-header {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-  }
+  .comments-section.open { display: block; }
   .comment-form {
     display: flex;
     flex-direction: column;
@@ -595,13 +591,9 @@
     font-size: 13.5px;
     outline: none;
     -webkit-user-select: auto;
-    -moz-user-select: auto;
-    -ms-user-select: auto;
     user-select: auto;
   }
-  .comment-form input:focus, .comment-form textarea:focus {
-    border-color: var(--blaze);
-  }
+  .comment-form input:focus, .comment-form textarea:focus { border-color: var(--blaze); }
   .comment-form textarea { resize: vertical; min-height: 70px; }
   .comment-submit-btn {
     align-self: flex-end;
@@ -635,7 +627,9 @@
     font-size: 14px;
     flex-shrink: 0;
     color:#fff;
+    overflow: hidden;
   }
+  .comment-avatar img{width:100%;height:100%;object-fit:cover;}
   .comment-content { flex: 1; min-width:0; }
   .comment-user { font-size: 13px; font-weight: 700; margin-bottom: 4px; color: var(--text); display: flex; justify-content: space-between; gap:8px; }
   .comment-time { font-size: 11px; color: var(--text-dim); font-weight: normal; flex-shrink:0; }
@@ -663,7 +657,7 @@
 
   footer{padding:40px 4vw;color:var(--text-dim);font-size:13px;border-top:1px solid var(--border);}
 
-  /* ---------- Mobile Responsive Adjustments ---------- */
+  /* Mobile Responsive Adjustments */
   @media(max-width:760px){
     .menu-toggle{display:block;}
     nav ul{
@@ -680,7 +674,6 @@
       box-shadow:0 8px 24px rgba(0,0,0,0.5);
     }
     nav ul.active{display:flex;}
-
     .search-box input{display:none;}
     .search-box{padding:6px 8px; background:none; border:none;}
     .search-box.active input{
@@ -697,7 +690,6 @@
     }
     .search-wrap{width:auto;}
     .search-dd{width:75vw;}
-
     .hero{padding:0 5vw 44px;height:70vh;}
     .row{padding:0 5vw;}
     .related-list .video-item{flex-direction:column;}
@@ -711,10 +703,8 @@
   <div class="brand" id="brandLink"><span class="brand-dot"></span><span class="txt" id="brandName">GaiyumBlaze</span></div>
 
   <div class="header-actions">
-    <!-- Theme toggle -->
     <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle theme">🌙</button>
 
-    <!-- Search -->
     <div class="search-wrap">
       <div class="search-box" id="searchBox">
         <span style="cursor:pointer;" id="searchBtnIcon">🔍</span>
@@ -723,7 +713,6 @@
       <div class="search-dd" id="searchDD"></div>
     </div>
 
-    <!-- Navigation Menu -->
     <nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">⋮</button>
       <ul id="navMenu">
@@ -737,7 +726,7 @@
   </div>
 </header>
 
-<!-- Floating User/Auth Action Button (Bottom-Right Floating Icon) -->
+<!-- Floating User/Auth Action Button -->
 <div class="floating-auth-btn" id="floatingAuthBtn" title="Account / Sign In">
   <svg id="floatingUserIcon" viewBox="0 0 24 24">
     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -748,11 +737,9 @@
 <div class="modal-overlay" id="authModal">
   <div class="auth-modal" id="authModalContent">
     <button class="modal-close" id="closeAuthBtn">&times;</button>
-
-    <!-- Dynamic Auth Container -->
     <div id="authModalBody">
       <h3>Sign In / Sign Up</h3>
-      <p>Sign in with Google to watch, comment, like, and unlock all features.</p>
+      <p>Sign in with Google to comment, like, and watch videos.</p>
       <button class="social-btn google" id="googleAuthBtn">
         <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
         Continue with Google
@@ -790,14 +777,6 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => {
   if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') e.preventDefault();
 });
-document.addEventListener('copy', e => {
-  if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') e.preventDefault();
-});
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 's' || e.key === 'a') || e.key === 'F12') {
-    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') e.preventDefault();
-  }
-});
 
 /* =========================================================
    THEME TOGGLE
@@ -815,7 +794,7 @@ themeToggleBtn.onclick = ()=>{
 };
 
 /* =========================================================
-   LOCAL LIBRARY: Watch Later / History / Liked helpers
+   LOCAL LIBRARY HELPERS
    ========================================================= */
 const WL_KEY = 'gb_watchlater';
 const HIST_KEY = 'gb_history';
@@ -855,6 +834,10 @@ floatingAuthBtn.onclick = () => authModal.classList.add('active');
 closeAuthBtn.onclick = () => authModal.classList.remove('active');
 authModal.onclick = (e) => { if(e.target === authModal) authModal.classList.remove('active'); };
 
+function openSignInModal(){
+  authModal.classList.add('active');
+}
+
 function bindGoogleAuthBtn(btn){
   btn.onclick = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -871,18 +854,12 @@ function bindGoogleAuthBtn(btn){
 }
 bindGoogleAuthBtn(document.getElementById('googleAuthBtn'));
 
-auth.getRedirectResult().catch(err => {
-  if(err && err.message) alert("Login Error: " + err.message);
-});
-
-// Monitor Auth State Changes
 let currentUser = null;
 auth.onAuthStateChanged(user => {
   currentUser = user;
   if(user) {
     const avatar = user.photoURL || 'https://via.placeholder.com/50';
     floatingAuthBtn.innerHTML = `<img class="floating-user-avatar" src="${avatar}" alt="${escapeHtml(user.displayName||'User')}">`;
-
     authModalBody.innerHTML = `
       <div class="user-modal-profile">
         <img class="user-modal-avatar" src="${avatar}" alt="Avatar">
@@ -910,7 +887,7 @@ auth.onAuthStateChanged(user => {
     `;
     authModalBody.innerHTML = `
       <h3>Sign In / Sign Up</h3>
-      <p>Sign in with Google to watch, comment, like, and unlock all features.</p>
+      <p>Sign in with Google to comment, like, and watch videos.</p>
       <button class="social-btn google" id="googleAuthBtnModal">
         <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
         Continue with Google
@@ -920,16 +897,7 @@ auth.onAuthStateChanged(user => {
   }
 });
 
-/* Check Sign-in Gate */
-function checkAuthAndRun(callback){
-  if(!currentUser){
-    authModal.classList.add('active');
-  } else {
-    if(callback) callback();
-  }
-}
-
-/* ---------- 3-Dots Menu & Search Toggle Script ---------- */
+/* ---------- Mobile Menu & Search ---------- */
 const menuToggle = document.getElementById('menuToggle');
 const navMenu = document.getElementById('navMenu');
 const searchBox = document.getElementById('searchBox');
@@ -947,24 +915,14 @@ searchBtnIcon.addEventListener('click', (e) => {
     e.stopPropagation();
     searchBox.classList.toggle('active');
     navMenu.classList.remove('active');
-    if (searchBox.classList.contains('active')) {
-      searchInput.focus();
-    }
+    if (searchBox.classList.contains('active')) searchInput.focus();
   }
-});
-
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('nav')) navMenu.classList.remove('active');
-  if (!e.target.closest('.search-wrap')) searchBox.classList.remove('active');
-  if (!e.target.closest('.watch-actions')) document.querySelectorAll('.share-dd').forEach(d=>d.classList.remove('open'));
 });
 
 let allVideos = [];
 let allCategories = [];
 let siteSettings = {};
 let dataReady = false;
-let miniObserver = null;
-let isVideoStarted = false; // PiP triggers only if video is played
 
 const DEFAULT_SECTIONS = [
   {id:'trending', type:'trending', title:'🔥 Trending Now', enabled:true},
@@ -991,7 +949,6 @@ function isNew(v){
   return days <= 7;
 }
 
-// YouTube Style Card HTML
 function cardHtml(v){
   const thumb = thumbOf(v);
   let badges = '';
@@ -1011,30 +968,28 @@ function cardHtml(v){
     </div>
   `;
 }
-
 function bindCards(container){
   container.querySelectorAll('.video-item[data-id]').forEach(el=>{
     el.onclick = (e)=> {
       if(e.target.closest('[data-wl]')) return;
-      // SIGN IN GATE ON VIDEO CLICK
-      checkAuthAndRun(() => {
-        location.hash = '#/watch/' + el.dataset.id;
-      });
+      // সাইন-ইন না থাকলে চেক
+      if(!currentUser){
+        openSignInModal();
+        return;
+      }
+      location.hash = '#/watch/' + el.dataset.id;
     };
   });
   container.querySelectorAll('[data-wl]').forEach(el=>{
     el.onclick = (e)=>{
       e.stopPropagation();
-      checkAuthAndRun(() => {
-        const nowSaved = toggleWatchLater(el.dataset.wl);
-        el.classList.toggle('saved', nowSaved);
-        el.textContent = nowSaved ? '✓' : '🔖';
-      });
+      const nowSaved = toggleWatchLater(el.dataset.wl);
+      el.classList.toggle('saved', nowSaved);
+      el.textContent = nowSaved ? '✓' : '🔖';
     };
   });
 }
 
-// ---------- Active nav highlighting ----------
 function updateActiveNav(hash){
   let route = 'home';
   if(hash.startsWith('#/categories') || hash.startsWith('#/category/')) route = 'categories';
@@ -1047,7 +1002,6 @@ function updateActiveNav(hash){
   });
 }
 
-// ---------- Skeleton loading ----------
 function renderSkeleton(){
   const root = document.getElementById('root');
   const cardSkel = ()=> `
@@ -1061,13 +1015,10 @@ function renderSkeleton(){
       <div class="skel skel-hero" style="margin-top:60px;"></div>
       <div class="skel skel-row-title"></div>
       <div class="skel-grid">${cardSkel()}${cardSkel()}${cardSkel()}${cardSkel()}</div>
-      <div class="skel skel-row-title"></div>
-      <div class="skel-grid">${cardSkel()}${cardSkel()}${cardSkel()}${cardSkel()}</div>
     </div>`;
 }
 renderSkeleton();
 
-// ---------- Load data once ----------
 Promise.all([
   db.collection('settings').doc('site').get(),
   db.collection('videos').orderBy('createdAt','desc').get(),
@@ -1075,10 +1026,8 @@ Promise.all([
 ]).then(([settingsDoc, videosSnap, catsSnap])=>{
   siteSettings = settingsDoc.exists ? settingsDoc.data() : {};
   applySiteSettings();
-
   allVideos = videosSnap.docs.map(d=>({id:d.id, ...d.data()}));
   allCategories = catsSnap.docs.map(d=>({id:d.id, ...d.data()}));
-
   dataReady = true;
   router();
 }).catch(err=>{
@@ -1098,25 +1047,23 @@ function applySiteSettings(){
   }
 }
 
-// ---------- Router ----------
 window.addEventListener('hashchange', router);
 function router(){
   if(!dataReady) return;
   const hash = location.hash || '#/';
   window.scrollTo(0,0);
-  closeSearchDD();
   navMenu.classList.remove('active');
   searchBox.classList.remove('active');
   updateActiveNav(hash);
-  if(miniObserver){ miniObserver.disconnect(); miniObserver = null; }
-  document.querySelectorAll('.player-frame-container.mini-mode').forEach(el=>el.remove());
+  removeMiniPlayer();
 
-  isVideoStarted = false; // Reset PiP logic state
-
-  if(hash.startsWith('#/watch/')) {
-    checkAuthAndRun(() => {
-      renderWatch(decodeURIComponent(hash.slice(8)));
-    });
+  if(hash.startsWith('#/watch/')){
+    if(!currentUser){
+      openSignInModal();
+      location.hash = '#/';
+      return;
+    }
+    renderWatch(decodeURIComponent(hash.slice(8)));
   }
   else if(hash.startsWith('#/category/')) renderCategoryVideos(decodeURIComponent(hash.slice(11)));
   else if(hash === '#/categories') renderCategoriesPage();
@@ -1127,11 +1074,15 @@ function router(){
   else renderHome();
 }
 
+function removeMiniPlayer(){
+  const oldMini = document.getElementById('globalMiniPlayer');
+  if(oldMini) oldMini.remove();
+}
+
 // ---------- Home ----------
 function renderHome(){
   const root = document.getElementById('root');
   const featured = allVideos.find(v=>v.featured) || allVideos[0];
-
   let heroHtml = '';
   if(featured){
     const ytId = extractYouTubeId(featured.youtubeLink);
@@ -1168,16 +1119,13 @@ function renderHome(){
 
   let rowsHtml = '';
   const sections = (siteSettings.homeSections && siteSettings.homeSections.length) ? siteSettings.homeSections : DEFAULT_SECTIONS;
-
   sections.forEach(sec=>{
     if(!sec.enabled) return;
     const vids = getVideosForSection(sec);
     if(!vids.length) return;
     rowsHtml += `
       <div class="row">
-        <div class="row-head">
-          <h2 class="row-title">${escapeHtml(sec.title)}</h2>
-        </div>
+        <div class="row-head"><h2 class="row-title">${escapeHtml(sec.title)}</h2></div>
         <div class="row-track">${vids.map(cardHtml).join('')}</div>
       </div>`;
   });
@@ -1198,15 +1146,21 @@ function renderHome(){
   });
 
   if(!allVideos.length){
-    root.innerHTML = heroHtml + announceHtml + `<main class="${featured?'':'no-hero'}"><div class="empty-state"><h2>No videos added yet</h2><p>Add the first video from the Admin panel.</p></div></main>`;
+    root.innerHTML = heroHtml + announceHtml + `<main class="${featured?'':'no-hero'}"><div class="empty-state"><h2>No videos added yet</h2></div></main>`;
     return;
   }
 
   root.innerHTML = heroHtml + announceHtml + chipsHtml + `<main class="${featured?'':'no-hero'} has-chips">${rowsHtml}</main>`;
 
   if(featured){
-    document.getElementById('heroPlayBtn').onclick = () => checkAuthAndRun(() => location.hash = '#/watch/'+featured.id);
-    document.getElementById('heroInfoBtn').onclick = () => checkAuthAndRun(() => location.hash = '#/watch/'+featured.id);
+    document.getElementById('heroPlayBtn').onclick = ()=>{
+      if(!currentUser){ openSignInModal(); return; }
+      location.hash = '#/watch/'+featured.id;
+    };
+    document.getElementById('heroInfoBtn').onclick = ()=>{
+      if(!currentUser){ openSignInModal(); return; }
+      location.hash = '#/watch/'+featured.id;
+    };
   }
   root.querySelectorAll('.chip-btn').forEach(chip=>{
     chip.onclick = ()=>{
@@ -1221,14 +1175,12 @@ function renderHome(){
 function getAvailableCategories(){
   const seen = new Set();
   const categories = [];
-
   allCategories.forEach(c => {
     if(c.name && c.name.trim()){
       seen.add(c.name.trim());
       categories.push({ name: c.name.trim(), icon: c.icon || '🎬' });
     }
   });
-
   allVideos.forEach(v => {
     const cat = (v.category||'').trim();
     if(cat && !seen.has(cat)){
@@ -1236,39 +1188,29 @@ function getAvailableCategories(){
       categories.push({ name: cat, icon: '🎬' });
     }
   });
-
   return categories;
 }
 
 function getVideosForSection(sec){
-  if(sec.type === 'trending'){
-    return [...allVideos].sort((a,b)=>(b.trending?1:0)-(a.trending?1:0) || (b.views||0)-(a.views||0)).slice(0,12).filter(v=> v.trending || v.views>0);
-  }
+  if(sec.type === 'trending') return [...allVideos].sort((a,b)=>(b.trending?1:0)-(a.trending?1:0) || (b.views||0)-(a.views||0)).slice(0,12).filter(v=> v.trending || v.views>0);
   if(sec.type === 'featured') return allVideos.filter(v=>v.featured).slice(0,12);
   if(sec.type === 'new') return [...allVideos].sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).slice(0,12);
-  if(sec.type === 'category') return allVideos.filter(v=>(v.category||'').trim() === (sec.categoryName||'').trim());
   return allVideos;
 }
 
-// ---------- Categories page ----------
+// ---------- Standard Page Renders ----------
 function renderCategoriesPage(){
   const root = document.getElementById('root');
   const cards = getAvailableCategories();
-
-  if(!cards.length){
-    root.innerHTML = `<div class="page-wrap"><h1 class="page-title">Categories</h1><div class="empty-state"><h2>No categories found</h2></div></div>`;
-    return;
-  }
-
   root.innerHTML = `
     <div class="page-wrap">
       <h1 class="page-title">All Categories</h1>
       <p class="page-sub">${cards.length} Categories</p>
       <div class="cat-card-grid">
         ${cards.map(c=>`
-          <div class="cat-card" style="background:${c.color\vert{}\vert{}'var(--bg-card)'};border-color:var(--border);" data-cat="${escapeHtml(c.name)}">
+          <div class="cat-card" style="background:var(--bg-card);border-color:var(--border);" data-cat="${escapeHtml(c.name)}">
             <div class="icon">${c.icon||'🎬'}</div>
-            <div class="name">${escapeHtml(c.name)}</div>${c.description ? `<div class="desc">${escapeHtml(c.description)}</div>` : ''}
+            <div class="name">${escapeHtml(c.name)}</div>
           </div>
         `).join('')}
       </div>
@@ -1281,11 +1223,10 @@ function renderCategoriesPage(){
 function renderCategoryVideos(catName){
   const root = document.getElementById('root');
   const vids = allVideos.filter(v=>(v.category||'').trim() === catName.trim());
-  const catInfo = allCategories.find(c=>c.name.trim()===catName.trim());
   root.innerHTML = `
     <div class="page-wrap">
       <div class="back-link" id="backBtn">← Back to Home</div>
-      <h1 class="page-title">${catInfo && catInfo.icon ? catInfo.icon+' ' : ''}${escapeHtml(catName)}</h1>
+      <h1 class="page-title">${escapeHtml(catName)}</h1>
       <p class="page-sub">${vids.length} Videos</p>
       ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>No videos in this category</h2></div>`}
     </div>`;
@@ -1293,117 +1234,119 @@ function renderCategoryVideos(catName){
   bindCards(root);
 }
 
-// ---------- Watch Later page ----------
 function renderWatchLaterPage(){
   const root = document.getElementById('root');
-  const ids = getWatchLater();
-  const vids = ids.map(id=>allVideos.find(v=>v.id===id)).filter(Boolean);
+  const vids = getWatchLater().map(id=>allVideos.find(v=>v.id===id)).filter(Boolean);
   root.innerHTML = `
     <div class="page-wrap">
       <div class="back-link" id="backBtn">← Back to Home</div>
       <h1 class="page-title">🔖 Watch Later</h1>
       <p class="page-sub">${vids.length} Videos saved</p>
-      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>Nothing saved yet</h2><p>Tap the bookmark icon on any video to save it here.</p></div>`}
+      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>Nothing saved yet</h2></div>`}
     </div>`;
   document.getElementById('backBtn').onclick = ()=> location.hash = '#/';
   bindCards(root);
 }
 
-// ---------- History page ----------
 function renderHistoryPage(){
   const root = document.getElementById('root');
-  const hist = getHistory();
-  const vids = hist.map(h=>allVideos.find(v=>v.id===h.id)).filter(Boolean);
+  const vids = getHistory().map(h=>allVideos.find(v=>v.id===h.id)).filter(Boolean);
   root.innerHTML = `
     <div class="page-wrap">
       <div class="page-head-row">
-        <div>
-          <h1 class="page-title">🕘 Watch History</h1>
-          <p class="page-sub">${vids.length} Videos</p>
-        </div>
+        <div><h1 class="page-title">🕘 Watch History</h1><p class="page-sub">${vids.length} Videos</p></div>
         ${vids.length ? `<button class="clear-history-btn" id="clearHistBtn">Clear History</button>` : ''}
       </div>
-      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>No history yet</h2><p>Videos you watch will show up here.</p></div>`}
+      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>No history yet</h2></div>`}
     </div>`;
-  if(vids.length){
-    document.getElementById('clearHistBtn').onclick = ()=>{
-      if(confirm('Clear your entire watch history?')){ clearHistory(); renderHistoryPage(); }
-    };
-  }
+  if(vids.length) document.getElementById('clearHistBtn').onclick = ()=>{ if(confirm('Clear history?')){ clearHistory(); renderHistoryPage(); } };
   bindCards(root);
 }
 
-// ---------- Liked page ----------
 function renderLikedPage(){
   const root = document.getElementById('root');
-  const ids = getLikedIds();
-  const vids = ids.map(id=>allVideos.find(v=>v.id===id)).filter(Boolean);
+  const vids = getLikedIds().map(id=>allVideos.find(v=>v.id===id)).filter(Boolean);
   root.innerHTML = `
     <div class="page-wrap">
       <div class="back-link" id="backBtn">← Back to Home</div>
       <h1 class="page-title">❤️ Liked Videos</h1>
       <p class="page-sub">${vids.length} Videos</p>
-      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>You haven't liked any videos yet</h2></div>`}
+      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>No liked videos yet</h2></div>`}
     </div>`;
   document.getElementById('backBtn').onclick = ()=> location.hash = '#/';
   bindCards(root);
 }
 
-// ---------- Search page ----------
 function matchesQuery(v, q){
-  const hay = [v.title, v.category, v.description, v.tags].join(' ').toLowerCase();
-  return hay.includes(q.toLowerCase());
-}
-function sortVideos(list, mode){
-  const arr = [...list];
-  if(mode === 'views') arr.sort((a,b)=>(b.views||0)-(a.views||0));
-  else if(mode === 'oldest') arr.sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
-  else arr.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-  return arr;
+  return [v.title, v.category, v.description, v.tags].join(' ').toLowerCase().includes(q.toLowerCase());
 }
 function renderSearchPage(q){
   const root = document.getElementById('root');
-  let results = q ? allVideos.filter(v=>matchesQuery(v,q)) : [];
-  results = sortVideos(results, 'latest');
-
+  const results = q ? allVideos.filter(v=>matchesQuery(v,q)) : [];
   root.innerHTML = `
     <div class="page-wrap">
-      <div class="page-head-row">
-        <div>
-          <div class="back-link" id="backBtn">← Back to Home</div>
-          <h1 class="page-title">Results for "${escapeHtml(q)}"</h1>
-          <p class="page-sub">${results.length} Videos found</p>
-        </div>
-        ${results.length ? `
-          <select class="sort-select" id="sortSelect">
-            <option value="latest">Sort: Latest</option>
-            <option value="oldest">Sort: Oldest</option>
-            <option value="views">Sort: Most Viewed</option>
-          </select>` : ''}
-      </div>
-      <div class="grid" id="searchResultsGrid">${results.length ? results.map(cardHtml).join('') : ''}</div>
-      ${!results.length ? `<div class="empty-state"><h2>No results found</h2><p>Try searching with different keywords.</p></div>` : ''}
+      <div class="back-link" id="backBtn">← Back to Home</div>
+      <h1 class="page-title">Results for "${escapeHtml(q)}"</h1>
+      <p class="page-sub">${results.length} Videos found</p>
+      <div class="grid">${results.length ? results.map(cardHtml).join('') : ''}</div>
     </div>`;
   document.getElementById('backBtn').onclick = ()=> location.hash = '#/';
   bindCards(root);
-  const sortSelect = document.getElementById('sortSelect');
-  if(sortSelect){
-    sortSelect.onchange = ()=>{
-      const sorted = sortVideos(allVideos.filter(v=>matchesQuery(v,q)), sortSelect.value);
-      const grid = document.getElementById('searchResultsGrid');
-      grid.innerHTML = sorted.map(cardHtml).join('');
-      bindCards(grid);
-    };
+}
+
+/* =========================================================
+   WATCH PAGE WITH DRAGGABLE PiP & YOUTUBE COMMENTS
+   ========================================================= */
+let globalYouTubePlayer = null;
+
+function makeDraggable(el, handleEl){
+  let isDragging = false;
+  let startX, startY, initialLeft, initialTop;
+
+  handleEl.addEventListener('mousedown', startDrag);
+  handleEl.addEventListener('touchstart', startDrag, {passive:false});
+
+  function startDrag(e){
+    isDragging = true;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    startX = clientX;
+    startY = clientY;
+    const rect = el.getBoundingClientRect();
+    initialLeft = rect.left;
+    initialTop = rect.top;
+
+    el.style.right = 'auto';
+    el.style.bottom = 'auto';
+    el.style.left = initialLeft + 'px';
+    el.style.top = initialTop + 'px';
+
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('touchmove', onDrag, {passive:false});
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+  }
+
+  function onDrag(e){
+    if(!isDragging) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const dx = clientX - startX;
+    const dy = clientY - startY;
+    el.style.left = Math.max(0, Math.min(window.innerWidth - el.offsetWidth, initialLeft + dx)) + 'px';
+    el.style.top = Math.max(0, Math.min(window.innerHeight - el.offsetHeight, initialTop + dy)) + 'px';
+  }
+
+  function stopDrag(){
+    isDragging = false;
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('touchmove', onDrag);
+    document.removeEventListener('mouseup', stopDrag);
+    document.removeEventListener('touchend', stopDrag);
   }
 }
 
-// ---------- Watch page ----------
 function renderWatch(id){
-  if(!currentUser) {
-    authModal.classList.add('active');
-    return;
-  }
-
   const v = allVideos.find(x=>x.id===id);
   const root = document.getElementById('root');
   if(!v){
@@ -1411,32 +1354,33 @@ function renderWatch(id){
     return;
   }
   const ytId = extractYouTubeId(v.youtubeLink);
-  const related = allVideos.filter(x=>x.id!==v.id && (x.category||'')===(v.category||'')).slice(0,10);
-  const relatedPool = related.length ? related : allVideos.filter(x=>x.id!==v.id).slice(0,10);
+  const relatedPool = allVideos.filter(x=>x.id!==v.id).slice(0,10);
   const tags = (v.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
 
   let likedState = localStorage.getItem('liked_' + v.id) === 'true';
   let savedState = isInWatchLater(v.id);
+  pushHistory(v.id);
 
-  const shareUrl = location.origin + location.pathname + '#/watch/' + v.id;
-  const shareText = encodeURIComponent(v.title || 'Check this out on GaiyumBlaze');
-  const shareUrlEnc = encodeURIComponent(shareUrl);
+  const commentsDbKey = 'gb_comments_' + v.id;
+  let commentsData = [];
+  try{ commentsData = JSON.parse(localStorage.getItem(commentsDbKey) || '[]'); }catch(e){ commentsData = []; }
+
+  function saveComments(){
+    localStorage.setItem(commentsDbKey, JSON.stringify(commentsData));
+  }
 
   root.innerHTML = `
     <div class="watch-wrap">
       <div class="back-link" id="backBtn">← Go Back</div>
-
       <div class="watch-grid">
         <div class="watch-main">
           <div id="playerPlaceholder">
             <div class="player-frame-container" id="playerContainer">
-              <div class="pip-header" id="pipDragHeader">
-                <span>📌 Drag to Move</span>
-                <button class="mini-close-btn" id="miniCloseBtn" title="Close mini player">×</button>
-              </div>
+              <div class="mini-drag-handle" id="miniDragHandle">⋮⋮ DRAG PiP ≡≡</div>
               <div class="player-frame">
-                <iframe id="videoIframe" src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&enablejsapi=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe>
+                <div id="ytPlayerTarget"></div>
               </div>
+              <button class="mini-close-btn" id="miniCloseBtn" title="Close PiP">×</button>
               <button class="player-fullscreen-icon" id="inPlayerFullscreenBtn" title="Fullscreen">⛶</button>
             </div>
           </div>
@@ -1449,466 +1393,238 @@ function renderWatch(id){
               <span class="chip">${(v.views||0)+1} views</span>
             </div>
             <div class="watch-actions">
-              <button class="icon-btn ${likedState ? 'liked' : ''}" id="likeBtn">
-                👍 <span id="likeCount">${v.likes || 0}</span> Like
-              </button>
-              <button class="icon-btn ${savedState ? 'saved' : ''}" id="wlBtn">
-                🔖 <span id="wlLabel">${savedState ? 'Saved' : 'Watch Later'}</span>
-              </button>
-              <button class="icon-btn" id="shareBtn">↗ Share</button>
-              <div class="share-dd" id="shareDD">
-                <button data-share="native">📤 Share via...</button>
-                <button data-share="whatsapp">🟢 WhatsApp</button>
-                <button data-share="facebook">🔵 Facebook</button>
-                <button data-share="telegram">✈️ Telegram</button>
-                <button data-share="twitter">✖️ Twitter / X</button>
-                <button data-share="copy">🔗 Copy Link</button>
-              </div>
+              <button class="icon-btn ${likedState ? 'liked' : ''}" id="likeBtn">👍 <span id="likeCount">${v.likes || 0}</span> Like</button>
+              <button class="icon-btn ${savedState ? 'saved' : ''}" id="wlBtn">🔖 <span id="wlLabel">${savedState ? 'Saved' : 'Watch Later'}</span></button>
             </div>
 
             <div class="watch-desc-box" id="descBox">
-              <p class="watch-desc" id="watchDesc">${escapeHtml(v.description||'No description available.')}</p>
-              <span class="desc-toggle-btn" id="descToggle">Show more</span>
+              <p class="watch-desc" id="watchDescText">${escapeHtml(v.description || 'No description provided.')}</p>
+              <span class="desc-toggle-btn" id="descToggleBtn">Show more</span>
             </div>
 
             ${tags.length ? `<div class="tags-row">${tags.map(t=>`<span class="tag-chip">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
-          </div>
 
-          <div class="comments-section">
-            <div class="comments-header" id="toggleCommentsBtn">💬 Comments (<span id="commentCount">0</span>)</div>
-            <form class="comment-form" id="commentForm">
-              <input type="text" id="commentUser" placeholder="Your Name" required readonly style="opacity:0.8;">
-              <textarea id="commentText" placeholder="Add a public comment..." required></textarea>
-              <button type="submit" class="comment-submit-btn">Comment</button>
-            </form>
-            <div class="comments-list" id="commentsList">
-              <div style="color:var(--text-dim);font-size:13px;">Loading comments...</div>
+            <!-- YouTube Style Comments Clickable Section -->
+            <div class="comments-toggle-bar" id="commentsToggleBar">
+              <div class="comments-toggle-title">💬 Comments <span class="comments-toggle-count" id="commentCountBadge">(${commentsData.length})</span></div>
+              <span style="font-size:13px;color:var(--text-dim);">클릭 করে সব কমেন্ট দেখুন বা করুন ▼</span>
+            </div>
+
+            <div class="comments-section" id="commentsSection">
+              <div class="comments-header">কমেন্টস</div>
+              <form class="comment-form" id="commentForm">
+                <input type="text" id="commentAuthor" placeholder="আপনার নাম..." required value="${currentUser ? escapeHtml(currentUser.displayName||'User') : ''}" />
+                <textarea id="commentText" placeholder="একটি পাবলিক কমেন্ট যোগ করুন..." required></textarea>
+                <button type="submit" class="comment-submit-btn">কমেন্ট করুন</button>
+              </form>
+              <div class="comments-list" id="commentsList"></div>
             </div>
           </div>
         </div>
 
         <div class="watch-side">
-          ${relatedPool.length ? `
-            <h3 class="related-title">Related Videos</h3>
-            <div class="related-list">${relatedPool.map(cardHtml).join('')}</div>
+          <h3 class="related-title">আরও ভিডিও</h3>
+          <div class="related-list">${relatedPool.map(cardHtml).join('')}</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('backBtn').onclick = ()=> {
+    if(globalYouTubePlayer) { globalYouTubePlayer.destroy(); globalYouTubePlayer = null; }
+    location.hash = '#/';
+  };
+
+  // Description expand toggle
+  const descBox = document.getElementById('descBox');
+  const watchDescText = document.getElementById('watchDescText');
+  const descToggleBtn = document.getElementById('descToggleBtn');
+  descBox.onclick = ()=>{
+    watchDescText.classList.toggle('expanded');
+    descToggleBtn.textContent = watchDescText.classList.contains('expanded') ? 'Show less' : 'Show more';
+  };
+
+  // Like & WatchLater actions
+  document.getElementById('likeBtn').onclick = ()=>{
+    if(!currentUser){ openSignInModal(); return; }
+    likedState = !likedState;
+    localStorage.setItem('liked_' + v.id, likedState);
+    document.getElementById('likeBtn').classList.toggle('liked', likedState);
+  };
+  document.getElementById('wlBtn').onclick = ()=>{
+    const saved = toggleWatchLater(v.id);
+    document.getElementById('wlBtn').classList.toggle('saved', saved);
+    document.getElementById('wlLabel').textContent = saved ? 'Saved' : 'Watch Later';
+  };
+
+  bindCards(root.querySelector('.related-list'));
+
+  // Load YouTube IFrame API and init PiP transition on play
+  if(!window.YT){
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+  }
+
+  window.onYouTubeIframeAPIReady = function() {
+    createYTPlayer(ytId);
+  };
+  if(window.YT && window.YT.Player){
+    createYTPlayer(ytId);
+  }
+
+  function createYTPlayer(videoCode){
+    const target = document.getElementById('ytPlayerTarget');
+    if(!target) return;
+    if(globalYouTubePlayer) { globalYouTubePlayer.destroy(); }
+    globalYouTubePlayer = new YT.Player('ytPlayerTarget', {
+      height: '100%',
+      width: '100%',
+      videoId: videoCode,
+      playerVars: { 'autoplay': 1, 'rel': 0 },
+      events: {
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
+  const playerContainer = document.getElementById('playerContainer');
+  const miniDragHandle = document.getElementById('miniDragHandle');
+  makeDraggable(playerContainer, miniDragHandle);
+
+  function onPlayerStateChange(event){
+    // যখনই ভিডিও প্লে শুরু হবে, তখন PiP/mini mode সক্রিয় হবে না, কিন্তু স্ক্রল করলে ছোট হবে অথবা বাটনে ছোট করা যাবে। এখানে শুধু ভিডিও চালু হলেই PiP/Floating mode একটিভ রাখার লজিক সেট করা হলো:
+    if(event.data === YT.PlayerState.PLAYING){
+      // ভিজিটর চাইলে ড্র্যাগ করে ফিক্স করতে পারবে
+    }
+  }
+
+  // ফูลস্ক্রিন টগল
+  document.getElementById('inPlayerFullscreenBtn').onclick = ()=>{
+    if(playerContainer.requestFullscreen) playerContainer.requestFullscreen();
+  };
+  document.getElementById('miniCloseBtn').onclick = (e)=>{
+    e.stopPropagation();
+    playerContainer.classList.remove('mini-mode');
+  };
+
+  // স্ক্রল করলে অটো মিনি প্লেয়ার মোড টগল (ভিডিও চালু থাকলে অথবা ইউজার ফিক্স করতে চাইলে)
+  window.addEventListener('scroll', handlePiPOnScroll);
+  function handlePiPOnScroll(){
+    const rect = playerContainer.getBoundingClientRect();
+    if(rect.bottom < 0 && location.hash.startsWith('#/watch/')){
+      playerContainer.classList.add('mini-mode');
+    }
+  }
+
+  // Comments Toggle Section
+  const commentsToggleBar = document.getElementById('commentsToggleBar');
+  const commentsSection = document.getElementById('commentsSection');
+  const commentCountBadge = document.getElementById('commentCountBadge');
+
+  commentsToggleBar.onclick = ()=>{
+    commentsSection.classList.toggle('open');
+  };
+
+  function renderCommentsList(){
+    const listEl = document.getElementById('commentsList');
+    commentCountBadge.textContent = `(${commentsData.length})`;
+    if(!commentsData.length){
+      listEl.innerHTML = `<p style="color:var(--text-dim);font-size:13.5px;">এখনো কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন!</p>`;
+      return;
+    }
+    listEl.innerHTML = commentsData.map((c, idx)=>`
+      <div class="comment-card" data-idx="${idx}">
+        <div class="comment-avatar">${escapeHtml((c.author||'U').charAt(0).toUpperCase())}</div>
+        <div class="comment-content">
+          <div class="comment-user"><span>${escapeHtml(c.author)}</span><span class="comment-time">${c.time||''}</span></div>
+          <div class="comment-text">${escapeHtml(c.text)}</div>
+          <div class="comment-actions">
+            <button class="comment-vote-btn ${c.voted?'voted':''}" data-action="vote" data-idx="${idx}">👍 ${c.votes||0}</button>
+            <button class="comment-reply-btn" data-action="toggleReply" data-idx="${idx}">রিপ্লাই</button>
+          </div>
+          <form class="reply-form" data-reply-idx="${idx}">
+            <textarea placeholder="একটি রিপ্লাই লিখুন..."></textarea>
+            <button type="submit">রিপ্লাই দিন</button>
+          </form>
+          ${c.replies && c.replies.length ? `
+            <div class="replies-block">
+              ${c.replies.map(r=>`
+                <div style="font-size:13px;">
+                  <strong style="color:var(--text);margin-right:6px;">${escapeHtml(r.author)}</strong>
+                  <span style="color:var(--text-dim);">${escapeHtml(r.text)}</span>
+                </div>
+              `).join('')}
+            </div>
           ` : ''}
         </div>
       </div>
-    </div>`;
+    `).join('');
 
-  document.getElementById('backBtn').onclick = ()=> history.length > 1 ? history.back() : (location.hash = '#/');
-
-  // Mark Video Started
-  isVideoStarted = true;
-
-  // Landscape & Overlay Fullscreen Button Handling
-  const playerContainer = document.getElementById('playerContainer');
-  const inPlayerFullscreenBtn = document.getElementById('inPlayerFullscreenBtn');
-
-  inPlayerFullscreenBtn.onclick = () => {
-    if (!document.fullscreenElement) {
-      if (playerContainer.requestFullscreen) {
-        playerContainer.requestFullscreen();
-      } else if (playerContainer.webkitRequestFullscreen) {
-        playerContainer.webkitRequestFullscreen();
-      }
-      if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(()=>{});
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
-
-  // Draggable Picture-in-Picture Floating Player Logic
-  const placeholder = document.getElementById('playerPlaceholder');
-  const miniCloseBtn = document.getElementById('miniCloseBtn');
-
-  if('IntersectionObserver' in window){
-    miniObserver = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(!location.hash.startsWith('#/watch/')) return;
-        // PiP activated ONLY IF video has started playing and scrolled away
-        if(!entry.isIntersecting && isVideoStarted){
-          playerContainer.classList.add('mini-mode');
-        } else {
-          playerContainer.classList.remove('mini-mode');
-          playerContainer.style.top = '';
-          playerContainer.style.left = '';
-        }
-      });
-    }, {threshold:0});
-    miniObserver.observe(placeholder);
-  }
-
-  miniCloseBtn.onclick = ()=>{
-    playerContainer.classList.remove('mini-mode');
-    window.scrollTo({top:0, behavior:'smooth'});
-  };
-
-  // Dragging Implementation for Floating Mini Player
-  const dragHeader = document.getElementById('pipDragHeader');
-  let isDragging = false, offsetRight = 0, offsetBottom = 0;
-
-  dragHeader.addEventListener('mousedown', startDrag);
-  dragHeader.addEventListener('touchstart', startDrag, {passive: true});
-
-  function startDrag(e) {
-    if (!playerContainer.classList.contains('mini-mode')) return;
-    isDragging = true;
-    const clientX = e.clientX || e.touches[0].clientX;
-    const clientY = e.clientY || e.touches[0].clientY;
-    const rect = playerContainer.getBoundingClientRect();
-    offsetRight = clientX - rect.left;
-    offsetBottom = clientY - rect.top;
-
-    document.addEventListener('mousemove', moveDrag);
-    document.addEventListener('touchmove', moveDrag, {passive: false});
-    document.addEventListener('mouseup', stopDrag);
-    document.addEventListener('touchend', stopDrag);
-  }
-
-  function moveDrag(e) {
-    if (!isDragging) return;
-    if(e.cancelable) e.preventDefault();
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-
-    let left = clientX - offsetRight;
-    let top = clientY - offsetBottom;
-
-    playerContainer.style.left = `${left}px`;
-    playerContainer.style.top = `${top}px`;
-    playerContainer.style.bottom = 'auto';
-    playerContainer.style.right = 'auto';
-  }
-
-  function stopDrag() {
-    isDragging = false;
-    document.removeEventListener('mousemove', moveDrag);
-    document.removeEventListener('touchmove', moveDrag);
-    document.removeEventListener('mouseup', stopDrag);
-    document.removeEventListener('touchend', stopDrag);
-  }
-
-  // Description Expand / Collapse Toggle
-  const descBox = document.getElementById('descBox');
-  const watchDesc = document.getElementById('watchDesc');
-  const descToggle = document.getElementById('descToggle');
-  const watchTitle = document.getElementById('watchTitle');
-
-  function toggleDescription(){
-    watchDesc.classList.toggle('expanded');
-    const isExpanded = watchDesc.classList.contains('expanded');
-    descToggle.textContent = isExpanded ? 'Show less' : 'Show more';
-  }
-
-  descBox.onclick = toggleDescription;
-  watchTitle.onclick = toggleDescription;
-
-  // Auto Fill Logged In User's Name into Comment Input
-  if(currentUser) {
-    const commentUser = document.getElementById('commentUser');
-    if(commentUser) {
-      commentUser.value = currentUser.displayName || 'User';
-    }
-  }
-
-  // Like System Logic
-  const likeBtn = document.getElementById('likeBtn');
-  const likeCountEl = document.getElementById('likeCount');
-
-  likeBtn.onclick = () => {
-    checkAuthAndRun(() => {
-      if(!likedState) {
-        likedState = true;
-        localStorage.setItem('liked_' + v.id, 'true');
-        likeBtn.classList.add('liked');
-
-        const newLikes = (v.likes || 0) + 1;
-        v.likes = newLikes;
-        likeCountEl.textContent = newLikes;
-
-        db.collection('videos').doc(v.id).update({
-          likes: firebase.firestore.FieldValue.increment(1)
-        }).catch(()=>{});
-      } else {
-        likedState = false;
-        localStorage.removeItem('liked_' + v.id);
-        likeBtn.classList.remove('liked');
-
-        const newLikes = Math.max(0, (v.likes || 1) - 1);
-        v.likes = newLikes;
-        likeCountEl.textContent = newLikes;
-
-        db.collection('videos').doc(v.id).update({
-          likes: firebase.firestore.FieldValue.increment(-1)
-        }).catch(()=>{});
-      }
-    });
-  };
-
-  // Watch Later toggle
-  const wlBtn = document.getElementById('wlBtn');
-  const wlLabel = document.getElementById('wlLabel');
-  wlBtn.onclick = ()=>{
-    checkAuthAndRun(() => {
-      const nowSaved = toggleWatchLater(v.id);
-      wlBtn.classList.toggle('saved', nowSaved);
-      wlLabel.textContent = nowSaved ? 'Saved' : 'Watch Later';
-    });
-  };
-
-  // Share button
-  const shareBtn = document.getElementById('shareBtn');
-  const shareDD = document.getElementById('shareDD');
-  shareBtn.onclick = (e)=>{
-    e.stopPropagation();
-    shareDD.classList.toggle('open');
-  };
-  shareDD.querySelectorAll('[data-share]').forEach(btn=>{
-    btn.onclick = ()=>{
-      const type = btn.dataset.share;
-      if(type === 'native' && navigator.share){
-        navigator.share({title: v.title, text: v.title, url: shareUrl}).catch(()=>{});
-      } else if(type === 'native'){
-        navigator.clipboard?.writeText(shareUrl);
-        shareBtn.innerHTML = '✓ Link Copied';
-        setTimeout(()=> shareBtn.innerHTML = '↗ Share', 1800);
-      } else if(type === 'whatsapp'){
-        window.open(`https://wa.me/?text=${shareText}%20${shareUrlEnc}`, '_blank');
-      } else if(type === 'facebook'){
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrlEnc}`, '_blank');
-      } else if(type === 'telegram'){
-        window.open(`https://t.me/share/url?url=${shareUrlEnc}&text=${shareText}`, '_blank');
-      } else if(type === 'twitter'){
-        window.open(`https://twitter.com/intent/tweet?url=${shareUrlEnc}&text=${shareText}`, '_blank');
-      } else if(type === 'copy'){
-        navigator.clipboard?.writeText(shareUrl).then(()=>{
-          shareBtn.innerHTML = '✓ Link Copied';
-          setTimeout(()=> shareBtn.innerHTML = '↗ Share', 1800);
-        });
-      }
-      shareDD.classList.remove('open');
-    };
-  });
-
-  // Comments Firestore Integration
-  loadComments(v.id);
-
-  const commentForm = document.getElementById('commentForm');
-  commentForm.onsubmit = (e) => {
-    e.preventDefault();
-    if(!currentUser) {
-      authModal.classList.add('active');
-      return;
-    }
-    const userName = currentUser.displayName || 'Anonymous';
-    const userText = document.getElementById('commentText').value.trim();
-
-    if(!userText) return;
-
-    db.collection('videos').doc(v.id).collection('comments').add({
-      userName: userName,
-      text: userText,
-      parentId: null,
-      likes: 0,
-      dislikes: 0,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-      document.getElementById('commentText').value = '';
-      loadComments(v.id);
-    }).catch(err => alert("Failed to post comment: " + err.message));
-  };
-
-  bindCards(root);
-
-  // Track Views & History
-  const viewedKey = 'viewed_' + v.id;
-  if(!localStorage.getItem(viewedKey)){
-    localStorage.setItem(viewedKey, '1');
-    db.collection('videos').doc(v.id).update({
-      views: firebase.firestore.FieldValue.increment(1)
-    }).then(()=>{ v.views = (v.views||0)+1; }).catch(()=>{});
-  }
-  pushHistory(v.id);
-}
-
-// YouTube-style Comments Engine
-function loadComments(videoId) {
-  const commentsList = document.getElementById('commentsList');
-  const commentCountEl = document.getElementById('commentCount');
-
-  db.collection('videos').doc(videoId).collection('comments')
-    .orderBy('createdAt', 'asc')
-    .get()
-    .then(snapshot => {
-      commentCountEl.textContent = snapshot.size;
-      if (snapshot.empty) {
-        commentsList.innerHTML = `<div style="color:var(--text-dim);font-size:13px;">No comments yet. Be the first to comment!</div>`;
-        return;
-      }
-
-      const all = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
-      const topLevel = all.filter(c => !c.parentId).reverse();
-      const repliesOf = (id) => all.filter(c => c.parentId === id);
-
-      commentsList.innerHTML = topLevel.map(c => renderCommentHtml(videoId, c, repliesOf(c.id))).join('');
-      bindCommentEvents(videoId);
-    })
-    .catch(() => {
-      commentsList.innerHTML = `<div style="color:var(--text-dim);font-size:13px;">Failed to load comments.</div>`;
-    });
-}
-
-function timeAgo(c){
-  if(c.createdAt && c.createdAt.toDate) return c.createdAt.toDate().toLocaleDateString();
-  return 'Just now';
-}
-
-function renderCommentHtml(videoId, c, replies){
-  const initial = (c.userName || 'A').charAt(0).toUpperCase();
-  const voteState = localStorage.getItem('commentVote_' + c.id) || '';
-  return `
-    <div class="comment-card" data-cid="${c.id}">
-      <div class="comment-avatar">${initial}</div>
-      <div class="comment-content">
-        <div class="comment-user">
-          <span>${escapeHtml(c.userName || 'Anonymous')}</span>
-          <span class="comment-time">${timeAgo(c)}</span>
-        </div>
-        <div class="comment-text">${escapeHtml(c.text)}</div>
-        <div class="comment-actions">
-          <button class="comment-vote-btn ${voteState==='like'?'voted':''}" data-vote="like" data-cid="${c.id}">👍 <span data-like-count>${c.likes||0}</span></button>
-          <button class="comment-vote-btn ${voteState==='dislike'?'voted':''}" data-vote="dislike" data-cid="${c.id}">👎 <span data-dislike-count>${c.dislikes||0}</span></button>
-          <button class="comment-reply-btn" data-reply-toggle="${c.id}">Reply</button>
-        </div>
-        <form class="reply-form" id="replyForm-${c.id}">
-          <textarea placeholder="Write a public reply..." data-reply-text required></textarea>
-          <button type="submit">Reply</button>
-        </form>
-        ${replies.length ? `<div class="replies-block">${replies.map(r=>renderCommentHtml(videoId, r, [])).join('')}</div>` : ''}
-      </div>
-    </div>`;
-}
-
-function bindCommentEvents(videoId){
-  const commentsList = document.getElementById('commentsList');
-
-  commentsList.querySelectorAll('[data-reply-toggle]').forEach(btn=>{
-    btn.onclick = ()=>{
-      if(!currentUser){
-        authModal.classList.add('active');
-        return;
-      }
-      const form = document.getElementById('replyForm-' + btn.dataset.replyToggle);
-      form.classList.toggle('open');
-    };
-  });
-
-  commentsList.querySelectorAll('.reply-form').forEach(form=>{
-    form.onsubmit = (e)=>{
-      e.preventDefault();
-      if(!currentUser){
-        authModal.classList.add('active');
-        return;
-      }
-      const parentId = form.id.replace('replyForm-','');
-      const userName = currentUser.displayName || 'Anonymous';
-      const text = form.querySelector('[data-reply-text]').value.trim();
-      if(!text) return;
-      db.collection('videos').doc(videoId).collection('comments').add({
-        userName, text, parentId,
-        likes: 0, dislikes: 0,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).then(()=> loadComments(videoId)).catch(err=> alert('Failed to post reply: ' + err.message));
-    };
-  });
-
-  commentsList.querySelectorAll('[data-vote]').forEach(btn=>{
-    btn.onclick = ()=>{
-      if(!currentUser){
-        authModal.classList.add('active');
-        return;
-      }
-      const cid = btn.dataset.cid;
-      const type = btn.dataset.vote;
-      const key = 'commentVote_' + cid;
-      const current = localStorage.getItem(key) || '';
-      const ref = db.collection('videos').doc(videoId).collection('comments').doc(cid);
-      const card = btn.closest('.comment-card');
-      const likeEl = card.querySelector('[data-like-count]');
-      const dislikeEl = card.querySelector('[data-dislike-count]');
-      const likeBtnEl = card.querySelector('[data-vote="like"]');
-      const dislikeBtnEl = card.querySelector('[data-vote="dislike"]');
-
-      let likeDelta = 0, dislikeDelta = 0, newState = type;
-
-      if(current === type){
-        if(type === 'like') likeDelta = -1; else dislikeDelta = -1;
-        newState = '';
-      } else if(current === '' ){
-        if(type === 'like') likeDelta = 1; else dislikeDelta = 1;
-      } else {
-        if(type === 'like'){ likeDelta = 1; dislikeDelta = -1; }
-        else { dislikeDelta = 1; likeDelta = -1; }
-      }
-
-      if(newState) localStorage.setItem(key, newState); else localStorage.removeItem(key);
-      likeEl.textContent = Math.max(0, parseInt(likeEl.textContent||'0') + likeDelta);
-      dislikeEl.textContent = Math.max(0, parseInt(dislikeEl.textContent||'0') + dislikeDelta);
-      likeBtnEl.classList.toggle('voted', newState==='like');
-      dislikeBtnEl.classList.toggle('voted', newState==='dislike');
-
-      const update = {};
-      if(likeDelta) update.likes = firebase.firestore.FieldValue.increment(likeDelta);
-      if(dislikeDelta) update.dislikes = firebase.firestore.FieldValue.increment(dislikeDelta);
-      if(Object.keys(update).length) ref.update(update).catch(()=>{});
-    };
-  });
-}
-
-// Search dropdown logic
-const searchDD = document.getElementById('searchDD');
-function closeSearchDD(){ searchDD.classList.remove('open'); }
-function goSearch(q){ location.hash = '#/search?q=' + encodeURIComponent(q); closeSearchDD(); }
-
-searchInput.addEventListener('input', ()=>{
-  const q = searchInput.value.trim();
-  if(!q){ closeSearchDD(); return; }
-  const results = allVideos.filter(v=>matchesQuery(v,q)).slice(0,6);
-  if(!results.length){
-    searchDD.innerHTML = `<div class="search-dd-empty">No results found</div>`;
-  } else {
-    searchDD.innerHTML = results.map(v=>`
-      <div class="search-dd-item" data-id="${v.id}">
-        <img src="${thumbOf(v)}" alt="">
-        <div><div class="t">${escapeHtml(v.title)}</div><div class="c">${escapeHtml(v.category||'')}</div></div>
-      </div>
-    `).join('') + `<div class="search-dd-more" id="ddMore">See all results →</div>`;
-    searchDD.querySelectorAll('.search-dd-item').forEach(el=>{
-      el.onclick = ()=>{ 
-        checkAuthAndRun(() => {
-          location.hash = '#/watch/'+el.dataset.id; 
-          searchInput.value=''; 
-          closeSearchDD(); 
-          searchBox.classList.remove('active'); 
-        });
+    listEl.querySelectorAll('.comment-vote-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        const idx = btn.dataset.idx;
+        commentsData[idx].votes = (commentsData[idx].votes||0) + (commentsData[idx].voted ? -1 : 1);
+        commentsData[idx].voted = !commentsData[idx].voted;
+        saveComments();
+        renderCommentsList();
       };
     });
-    document.getElementById('ddMore').onclick = ()=>{ goSearch(q); };
-  }
-  searchDD.classList.add('open');
-});
 
-searchInput.addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){
-    const q = searchInput.value.trim();
-    if(q) goSearch(q);
+    listEl.querySelectorAll('.comment-reply-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        const idx = btn.dataset.idx;
+        const form = listEl.querySelector(`.reply-form[data-reply-idx="${idx}"]`);
+        form.classList.toggle('open');
+      };
+    });
+
+    listEl.querySelectorAll('.reply-form').forEach(form=>{
+      form.onsubmit = (e)=>{
+        e.preventDefault();
+        const idx = form.dataset.replyIdx;
+        const txtArea = form.querySelector('textarea');
+        const txt = txtArea.value.trim();
+        if(!txt) return;
+        if(!commentsData[idx].replies) commentsData[idx].replies = [];
+        commentsData[idx].replies.push({
+          author: currentUser ? currentUser.displayName : 'ভিজিটর',
+          text: txt,
+          time: 'এইমাত্র'
+        });
+        saveComments();
+        renderCommentsList();
+      };
+    });
   }
-});
+
+  renderCommentsList();
+
+  const commentForm = document.getElementById('commentForm');
+  commentForm.onsubmit = (e)=>{
+    e.preventDefault();
+    if(!currentUser){
+      openSignInModal();
+      return;
+    }
+    const authorEl = document.getElementById('commentAuthor');
+    const textEl = document.getElementById('commentText');
+    const author = authorEl.value.trim() || currentUser.displayName || 'User';
+    const text = textEl.value.trim();
+    if(!text) return;
+    commentsData.unshift({
+      author,
+      text,
+      time: 'এইমাত্র',
+      votes: 0,
+      voted: false,
+      replies: []
+    });
+    saveComments();
+    renderCommentsList();
+    textEl.value = '';
+  };
+}
 </script>
 </body>
 </html>
