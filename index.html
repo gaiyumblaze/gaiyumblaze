@@ -62,41 +62,40 @@
   nav a{font-size:13.5px;font-weight:500;color:var(--text-dim);white-space:nowrap;}
   nav a:hover{color:var(--text);}
 
-  /* Auth UI Buttons */
-  .auth-btn {
-    background: linear-gradient(90deg, var(--blaze), var(--blaze-2));
-    color: #fff;
+  /* Floating Auth Button */
+  .floating-auth-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blaze), var(--blaze-2));
     border: none;
-    padding: 7px 16px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .auth-btn:hover { opacity: 0.9; }
-  .user-profile {
+    box-shadow: 0 8px 24px rgba(255, 90, 31, 0.4);
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  .user-avatar {
-    width: 30px;
-    height: 30px;
+  .floating-auth-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 28px rgba(255, 90, 31, 0.6);
+  }
+  .floating-auth-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+  }
+  .floating-auth-btn img {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid var(--blaze-2);
+    border: 2px solid var(--blaze-2);
   }
-  .logout-btn {
-    background: rgba(255,255,255,0.1);
-    color: var(--text-dim);
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .logout-btn:hover { color: var(--text); background: rgba(255,255,255,0.2); }
 
   /* Auth Modal */
   .modal-overlay {
@@ -131,7 +130,7 @@
   .social-btn {
     width: 100%;
     display: flex; align-items: center; justify-content: center; gap: 10px;
-    padding: 11px; margin-bottom: 12px;
+    padding: 12px; margin-bottom: 12px;
     border-radius: 8px; border: 1px solid var(--border);
     background: rgba(255,255,255,0.05);
     color: var(--text); font-weight: 600; font-size: 14px;
@@ -139,7 +138,34 @@
   }
   .social-btn:hover { background: rgba(255,255,255,0.12); }
   .social-btn.google { border-color: rgba(234, 67, 53, 0.4); }
-  .social-btn.facebook { border-color: rgba(24, 119, 242, 0.4); }
+
+  .user-info-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .user-info-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid var(--blaze-2);
+  }
+  .logout-btn-modal {
+    background: rgba(255,90,31,0.2);
+    border: 1px solid var(--blaze);
+    color: var(--blaze-2);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .logout-btn-modal:hover {
+    background: var(--blaze);
+    color: #fff;
+  }
 
   /* Menu Toggle Button (3 Dots) */
   .menu-toggle{
@@ -544,28 +570,31 @@
       <ul id="navMenu">
         <li><a href="#/">Home</a></li>
         <li><a href="#/categories">Categories</a></li>
-        <li id="authContainer">
-          <button class="auth-btn" id="openAuthBtn">Login</button>
-        </li>
       </ul>
     </nav>
   </div>
 </header>
 
-<!-- Social Auth Modal Popup -->
+<!-- Floating Profile / Login Button -->
+<button class="floating-auth-btn" id="floatingAuthBtn" title="Account / Login">
+  <svg id="defaultUserIcon" viewBox="0 0 24 24">
+    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+  </svg>
+  <img id="userAvatarImg" src="" alt="Avatar" style="display:none;">
+</button>
+
+<!-- Google Auth Modal Popup -->
 <div class="modal-overlay" id="authModal">
   <div class="auth-modal">
     <button class="modal-close" id="closeAuthBtn">&times;</button>
-    <h3>Sign In / Up</h3>
-    <p>Sign in to comment, like, and unlock premium features.</p>
-    <button class="social-btn google" id="googleAuthBtn">
-      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-      Continue with Google
-    </button>
-    <button class="social-btn facebook" id="facebookAuthBtn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-      Continue with Facebook
-    </button>
+    <div id="modalAuthContent">
+      <h3>Sign In / Up</h3>
+      <p>Sign in to comment, like, and unlock premium features.</p>
+      <button class="social-btn google" id="googleAuthBtn">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button>
+    </div>
   </div>
 </div>
 
@@ -607,15 +636,16 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ---------- Auth System Logic (Google & Facebook) ---------- */
+/* ---------- Floating Auth System Logic (Google Only) ---------- */
 const authModal = document.getElementById('authModal');
-const openAuthBtn = document.getElementById('openAuthBtn');
+const floatingAuthBtn = document.getElementById('floatingAuthBtn');
 const closeAuthBtn = document.getElementById('closeAuthBtn');
 const googleAuthBtn = document.getElementById('googleAuthBtn');
-const facebookAuthBtn = document.getElementById('facebookAuthBtn');
-const authContainer = document.getElementById('authContainer');
+const defaultUserIcon = document.getElementById('defaultUserIcon');
+const userAvatarImg = document.getElementById('userAvatarImg');
+const modalAuthContent = document.getElementById('modalAuthContent');
 
-openAuthBtn.onclick = () => authModal.classList.add('active');
+floatingAuthBtn.onclick = () => authModal.classList.add('active');
 closeAuthBtn.onclick = () => authModal.classList.remove('active');
 authModal.onclick = (e) => { if(e.target === authModal) authModal.classList.remove('active'); };
 
@@ -626,29 +656,50 @@ googleAuthBtn.onclick = () => {
     .catch(err => alert("Google Sign-In Error: " + err.message));
 };
 
-facebookAuthBtn.onclick = () => {
-  const provider = new firebase.auth.FacebookAuthProvider();
-  auth.signInWithPopup(provider)
-    .then(() => authModal.classList.remove('active'))
-    .catch(err => alert("Facebook Sign-In Error: " + err.message));
-};
-
 // Monitor Auth State Changes
 let currentUser = null;
 auth.onAuthStateChanged(user => {
   currentUser = user;
   if(user) {
-    const avatar = user.photoURL || 'https://via.placeholder.com/30';
-    authContainer.innerHTML = `
-      <div class="user-profile">
-        <img class="user-avatar" src="${avatar}" alt="${escapeHtml(user.displayName||'User')}">
-        <button class="logout-btn" id="logoutBtn">Logout</button>
+    const avatar = user.photoURL || '';
+    if(avatar) {
+      userAvatarImg.src = avatar;
+      userAvatarImg.style.display = 'block';
+      defaultUserIcon.style.display = 'none';
+    } else {
+      userAvatarImg.style.display = 'none';
+      defaultUserIcon.style.display = 'block';
+    }
+
+    modalAuthContent.innerHTML = `
+      <div class="user-info-box">
+        <img class="user-info-avatar" src="${avatar || 'https://via.placeholder.com/64'}" alt="${escapeHtml(user.displayName||'User')}">
+        <h3>${escapeHtml(user.displayName || 'User')}</h3>
+        <p style="margin-bottom:10px;">${escapeHtml(user.email || '')}</p>
+        <button class="logout-btn-modal" id="logoutBtnModal">Sign Out</button>
       </div>
     `;
-    document.getElementById('logoutBtn').onclick = () => auth.signOut();
+    document.getElementById('logoutBtnModal').onclick = () => {
+      auth.signOut().then(() => authModal.classList.remove('active'));
+    };
   } else {
-    authContainer.innerHTML = `<button class="auth-btn" id="openAuthBtn">Login</button>`;
-    document.getElementById('openAuthBtn').onclick = () => authModal.classList.add('active');
+    userAvatarImg.style.display = 'none';
+    defaultUserIcon.style.display = 'block';
+
+    modalAuthContent.innerHTML = `
+      <h3>Sign In / Up</h3>
+      <p>Sign in to comment, like, and unlock premium features.</p>
+      <button class="social-btn google" id="googleAuthBtn">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button>
+    `;
+    document.getElementById('googleAuthBtn').onclick = () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => authModal.classList.remove('active'))
+        .catch(err => alert("Google Sign-In Error: " + err.message));
+    };
   }
 });
 
