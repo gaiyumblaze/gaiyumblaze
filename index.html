@@ -738,7 +738,7 @@ let siteSettings = {};
 let dataReady = false;
 
 const DEFAULT_SECTIONS = [
-  {id:'trending', type:'trending', title:'🔥 Trending Now', enabled:true},
+  {id:'trending', type:'trending', title:' Trending Now', enabled:true},
   {id:'featured', type:'featured', title:'⭐ Featured', enabled:true},
   {id:'new', type:'new', title:'🆕 Recently Added', enabled:true},
   {id:'all', type:'all', title:'📺 All Videos', enabled:true}
@@ -767,7 +767,7 @@ function cardHtml(v){
   const thumb = thumbOf(v);
   let badges = '';
   if(isNew(v)) badges += '<span class="badge new">NEW</span>';
-  if(v.trending) badges += '<span class="badge trend">🔥 TRENDING</span>';
+  if(v.trending) badges += '<span class="badge trend"> TRENDING</span>';
   return `
     <div class="video-item" data-id="${v.id}">
       <div class="card">
