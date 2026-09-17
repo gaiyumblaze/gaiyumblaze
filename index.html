@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -218,13 +218,13 @@
   <div class="brand" id="brandLink"><span class="brand-dot"></span><span class="txt" id="brandName">GaiyumBlaze</span></div>
   <nav>
     <ul>
-      <li><a href="#/">হোম</a></li>
-      <li><a href="#/categories">ক্যাটাগরি</a></li>
+      <li><a href="#/">Home</a></li>
+      <li><a href="#/categories">Categories</a></li>
     </ul>
     <div class="search-wrap">
       <div class="search-box">
         <span>🔍</span>
-        <input type="text" id="searchInput" placeholder="ভিডিও খুঁজুন...">
+        <input type="text" id="searchInput" placeholder="Search videos...">
       </div>
       <div class="search-dd" id="searchDD"></div>
     </div>
@@ -233,7 +233,7 @@
 
 <div id="root"></div>
 
-<footer>© <span id="year"></span> <span id="footerBrand">GaiyumBlaze</span> — সব স্বত্ব সংরক্ষিত।</footer>
+<footer>© <span id="year"></span> <span id="footerBrand">GaiyumBlaze</span> — All rights reserved.</footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -259,10 +259,10 @@ let siteSettings = {};
 let dataReady = false;
 
 const DEFAULT_SECTIONS = [
-  {id:'trending', type:'trending', title:'🔥 Trending Now', enabled:true},
+  {id:'trending', type:'trending', title:'🔴 Trending Now', enabled:true},
   {id:'featured', type:'featured', title:'⭐ Featured', enabled:true},
   {id:'new', type:'new', title:'🆕 Recently Added', enabled:true},
-  {id:'all', type:'all', title:'📺 সব ভিডিও', enabled:true}
+  {id:'all', type:'all', title:'📺 All Videos', enabled:true}
 ];
 
 function extractYouTubeId(url){
@@ -287,15 +287,15 @@ function cssSafe(s){return (s||'').replace(/[^a-zA-Z0-9]/g,'-');}
 function cardHtml(v){
   const thumb = thumbOf(v);
   let badges = '';
-  if(isNew(v)) badges += '<span class="badge new">নতুন</span>';
-  if(v.trending) badges += '<span class="badge trend">🔥 ট্রেন্ডিং</span>';
+  if(isNew(v)) badges += '<span class="badge new">NEW</span>';
+  if(v.trending) badges += '<span class="badge trend">🔴 TRENDING</span>';
   return `
     <div class="card" data-id="${v.id}">
       <img src="${thumb}" alt="${escapeHtml(v.title)}" loading="lazy">
       ${badges ? `<div class="badges">${badges}</div>` : ''}
-      <div class="views-tag">${(v.views||0)} ভিউ</div>
+      <div class="views-tag">${(v.views||0)} views</div>
       <div class="play-badge">▶</div>
-      <div class="card-overlay"><h4>${escapeHtml(v.title||'শিরোনামহীন')}</h4></div>
+      <div class="card-overlay"><h4>${escapeHtml(v.title||'Untitled')}</h4></div>
     </div>
   `;
 }
@@ -320,7 +320,7 @@ Promise.all([
   dataReady = true;
   router();
 }).catch(err=>{
-  document.getElementById('root').innerHTML = `<div class="empty-state"><h2>ডেটা লোড করা যায়নি</h2><p>${escapeHtml(err.message)}</p></div>`;
+  document.getElementById('root').innerHTML = `<div class="empty-state"><h2>Failed to load data</h2><p>${escapeHtml(err.message)}</p></div>`;
 });
 
 function applySiteSettings(){
@@ -364,12 +364,12 @@ function renderHome(){
     heroHtml = `
       <section class="hero" style="background-image:url('${backdrop}')">
         <div class="hero-content">
-          <div class="hero-eyebrow">${escapeHtml(siteSettings.heroEyebrow || 'এখন দেখুন')}</div>
+          <div class="hero-eyebrow">${escapeHtml(siteSettings.heroEyebrow || 'Watch Now')}</div>
           <h1 class="hero-title">${escapeHtml(siteSettings.heroTitle || featured.title || 'GaiyumBlaze')}</h1>
           <p class="hero-desc">${escapeHtml(siteSettings.heroDesc || featured.description || '')}</p>
           <div class="hero-btns">
-            <button class="btn btn-play" id="heroPlayBtn">▶ চালান</button>
-            <button class="btn btn-ghost" id="heroInfoBtn">বিস্তারিত</button>
+            <button class="btn btn-play" id="heroPlayBtn">▶ Play</button>
+            <button class="btn btn-ghost" id="heroInfoBtn">More Info</button>
           </div>
         </div>
       </section>`;
@@ -379,7 +379,7 @@ function renderHome(){
   const announceHtml = announce.enabled && announce.text ? `
     <div class="announce">
       <span>${escapeHtml(announce.text)}</span>
-      ${announce.link ? `<a href="${escapeHtml(announce.link)}" target="_blank" rel="noopener">${announce.linkLabel ? escapeHtml(announce.linkLabel) : 'দেখুন →'}</a>` : ''}
+      ${announce.link ? `<a href="${escapeHtml(announce.link)}" target="_blank" rel="noopener">${announce.linkLabel ? escapeHtml(announce.linkLabel) : 'View →'}</a>` : ''}
     </div>` : '';
 
   const sections = (siteSettings.homeSections && siteSettings.homeSections.length) ? siteSettings.homeSections : DEFAULT_SECTIONS;
@@ -397,7 +397,7 @@ function renderHome(){
   });
 
   if(!allVideos.length){
-    root.innerHTML = heroHtml + announceHtml + `<main class="${featured?'':'no-hero'}"><div class="empty-state"><h2>এখনো কোনো ভিডিও যোগ হয়নি</h2><p>Admin panel থেকে প্রথম ভিডিওটি যোগ করুন।</p></div></main>`;
+    root.innerHTML = heroHtml + announceHtml + `<main class="${featured?'':'no-hero'}"><div class="empty-state"><h2>No videos added yet</h2><p>Add the first video from the Admin panel.</p></div></main>`;
     return;
   }
 
@@ -436,14 +436,14 @@ function renderCategoriesPage(){
   });
 
   if(!cards.length){
-    root.innerHTML = `<div class="page-wrap"><h1 class="page-title">ক্যাটাগরি</h1><div class="empty-state"><h2>কোনো ক্যাটাগরি নেই</h2></div></div>`;
+    root.innerHTML = `<div class="page-wrap"><h1 class="page-title">Categories</h1><div class="empty-state"><h2>No categories found</h2></div></div>`;
     return;
   }
 
   root.innerHTML = `
     <div class="page-wrap">
-      <h1 class="page-title">সব ক্যাটাগরি</h1>
-      <p class="page-sub">${cards.length}টি ক্যাটাগরি</p>
+      <h1 class="page-title">All Categories</h1>
+      <p class="page-sub">${cards.length} Categories</p>
       <div class="cat-card-grid">
         ${cards.map(c=>`
           <div class="cat-card" style="background:${c.color||'#1b1e24'};border-color:rgba(255,255,255,0.1);" data-cat="${escapeHtml(c.name)}">
@@ -465,10 +465,10 @@ function renderCategoryVideos(catName){
   const catInfo = allCategories.find(c=>c.name.trim()===catName.trim());
   root.innerHTML = `
     <div class="page-wrap">
-      <div class="back-link" id="backBtn">← হোমে ফিরুন</div>
+      <div class="back-link" id="backBtn">← Back to Home</div>
       <h1 class="page-title">${catInfo && catInfo.icon ? catInfo.icon+' ' : ''}${escapeHtml(catName)}</h1>
-      <p class="page-sub">${vids.length}টি ভিডিও</p>
-      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>এই ক্যাটাগরিতে কোনো ভিডিও নেই</h2></div>`}
+      <p class="page-sub">${vids.length} Videos</p>
+      ${vids.length ? `<div class="grid">${vids.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>No videos in this category</h2></div>`}
     </div>`;
   document.getElementById('backBtn').onclick = ()=> location.hash = '#/';
   bindCards(root);
@@ -484,10 +484,10 @@ function renderSearchPage(q){
   const results = q ? allVideos.filter(v=>matchesQuery(v,q)) : [];
   root.innerHTML = `
     <div class="page-wrap">
-      <div class="back-link" id="backBtn">← হোমে ফিরুন</div>
-      <h1 class="page-title">"${escapeHtml(q)}" এর ফলাফল</h1>
-      <p class="page-sub">${results.length}টি ভিডিও পাওয়া গেছে</p>
-      ${results.length ? `<div class="grid">${results.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>কোনো ফলাফল পাওয়া যায়নি</h2><p>অন্য শব্দ দিয়ে খুঁজে দেখুন।</p></div>`}
+      <div class="back-link" id="backBtn">← Back to Home</div>
+      <h1 class="page-title">Results for "${escapeHtml(q)}"</h1>
+      <p class="page-sub">${results.length} Videos found</p>
+      ${results.length ? `<div class="grid">${results.map(cardHtml).join('')}</div>` : `<div class="empty-state"><h2>No results found</h2><p>Try searching with different keywords.</p></div>`}
     </div>`;
   document.getElementById('backBtn').onclick = ()=> location.hash = '#/';
   bindCards(root);
@@ -498,7 +498,7 @@ function renderWatch(id){
   const v = allVideos.find(x=>x.id===id);
   const root = document.getElementById('root');
   if(!v){
-    root.innerHTML = `<div class="page-wrap"><div class="empty-state"><h2>ভিডিও পাওয়া যায়নি</h2></div></div>`;
+    root.innerHTML = `<div class="page-wrap"><div class="empty-state"><h2>Video not found</h2></div></div>`;
     return;
   }
   const ytId = extractYouTubeId(v.youtubeLink);
@@ -508,7 +508,7 @@ function renderWatch(id){
 
   root.innerHTML = `
     <div class="watch-wrap">
-      <div class="back-link" id="backBtn">← ফিরে যান</div>
+      <div class="back-link" id="backBtn">← Go Back</div>
       <div class="player-frame">
         <iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
@@ -517,16 +517,16 @@ function renderWatch(id){
         <div class="watch-sub">
           ${v.category ? `<span class="chip">${escapeHtml(v.category)}</span>` : ''}
           ${v.duration ? `<span class="chip">${escapeHtml(v.duration)}</span>` : ''}
-          <span class="chip">${(v.views||0)+1} ভিউ</span>
+          <span class="chip">${(v.views||0)+1} views</span>
         </div>
         <div class="watch-actions">
-          <button class="icon-btn" id="shareBtn">↗ শেয়ার</button>
+          <button class="icon-btn" id="shareBtn">↗ Share</button>
         </div>
         <p class="watch-desc">${escapeHtml(v.description||'')}</p>
         ${tags.length ? `<div class="tags-row">${tags.map(t=>`<span class="tag-chip">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
       </div>
       ${relatedPool.length ? `
-        <h3 class="related-title">সম্পর্কিত ভিডিও</h3>
+        <h3 class="related-title">Related Videos</h3>
         <div class="grid">${relatedPool.map(cardHtml).join('')}</div>
       ` : ''}
     </div>`;
@@ -535,8 +535,8 @@ function renderWatch(id){
   document.getElementById('shareBtn').onclick = ()=>{
     const url = location.origin + location.pathname + '#/watch/' + v.id;
     navigator.clipboard?.writeText(url).then(()=>{
-      document.getElementById('shareBtn').textContent = '✓ লিংক কপি হয়েছে';
-      setTimeout(()=> document.getElementById('shareBtn').innerHTML = '↗ শেয়ার', 1800);
+      document.getElementById('shareBtn').textContent = '✓ Link Copied';
+      setTimeout(()=> document.getElementById('shareBtn').innerHTML = '↗ Share', 1800);
     });
   };
   bindCards(root);
@@ -555,14 +555,14 @@ searchInput.addEventListener('input', ()=>{
   if(!q){ closeSearchDD(); return; }
   const results = allVideos.filter(v=>matchesQuery(v,q)).slice(0,6);
   if(!results.length){
-    searchDD.innerHTML = `<div class="search-dd-empty">কোনো ফলাফল পাওয়া যায়নি</div>`;
+    searchDD.innerHTML = `<div class="search-dd-empty">No results found</div>`;
   } else {
     searchDD.innerHTML = results.map(v=>`
       <div class="search-dd-item" data-id="${v.id}">
         <img src="${thumbOf(v)}" alt="">
         <div><div class="t">${escapeHtml(v.title)}</div><div class="c">${escapeHtml(v.category||'')}</div></div>
       </div>
-    `).join('') + `<div class="search-dd-more" id="ddMore">সব ফলাফল দেখুন →</div>`;
+    `).join('') + `<div class="search-dd-more" id="ddMore">See all results →</div>`;
     searchDD.querySelectorAll('.search-dd-item').forEach(el=>{
       el.onclick = ()=>{ location.hash = '#/watch/'+el.dataset.id; searchInput.value=''; closeSearchDD(); };
     });
