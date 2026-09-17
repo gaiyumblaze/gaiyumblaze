@@ -245,8 +245,10 @@
 
   /* ---------- Category Filter Chips ---------- */
   .chips-row{
-    display:flex;gap:10px;overflow-x:auto;padding:0 4vw 18px;margin-top:76px;
+    display:flex;gap:10px;overflow-x:auto;padding:12px 4vw;margin-top:0;
     scrollbar-width:none;
+    position:relative;
+    z-index:4;
   }
   .chips-row::-webkit-scrollbar{display:none;}
   .chip-btn{
@@ -286,9 +288,9 @@
   /* ---------- Hero ---------- */
   .hero{
     position:relative;
-    height:86vh;min-height:500px;
+    height:70vh;min-height:450px;
     display:flex;align-items:flex-end;
-    padding:0 4vw 60px;
+    padding:0 4vw 40px;
     background-size:cover;background-position:center top;
     margin-top:60px;
   }
@@ -1122,7 +1124,7 @@ function renderHome(){
   // Quick category filter chips (YouTube style)
   const chipCats = getAvailableCategories();
   const chipsHtml = chipCats.length ? `
-    <div class="chips-row" style="${featured?'margin-top:0;':''}">
+    <div class="chips-row">
       <button class="chip-btn active" data-chip="all">All</button>
       ${chipCats.map(c=>`<button class="chip-btn" data-chip="${escapeHtml(c.name)}">${c.icon?c.icon+' ':''}${escapeHtml(c.name)}</button>`).join('')}
     </div>` : '';
@@ -1163,7 +1165,7 @@ function renderHome(){
     return;
   }
 
-  root.innerHTML = heroHtml + announceHtml + chipsHtml + `<main style="margin-top:${featured?'-46px':'0'};" class="${featured?'':'no-hero'} has-chips">${rowsHtml}</main>`;
+  root.innerHTML = heroHtml + announceHtml + chipsHtml + `<main class="${featured?'':'no-hero'} has-chips">${rowsHtml}</main>`;
 
   if(featured){
     document.getElementById('heroPlayBtn').onclick = ()=> location.hash = '#/watch/'+featured.id;
