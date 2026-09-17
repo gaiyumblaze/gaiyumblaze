@@ -183,7 +183,7 @@
     max-width:520px;
     margin:0 0 26px;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* ৩ লাইন দেখাবে */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -204,8 +204,10 @@
   main{position:relative;z-index:3;padding-bottom:80px;}
   main.no-hero{padding-top:100px;}
   .row{padding:0 4vw;margin-bottom:36px;}
-  .row-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;}
+  .row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
   .row-title{font-size:18.5px;font-weight:700;margin:0;}
+  .see-all-btn{font-size:13px;color:var(--blaze-2);font-weight:600;cursor:pointer;}
+  .see-all-btn:hover{text-decoration:underline;}
   .row-track{
     display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;
     scrollbar-width:none;
@@ -495,18 +497,39 @@ function renderHome(){
       ${announce.link ? `<a href="${escapeHtml(announce.link)}" target="_blank" rel="noopener">${announce.linkLabel ? escapeHtml(announce.linkLabel) : 'View →'}</a>` : ''}
     </div>` : '';
 
+  let rowsHtml = '';
+
+  // ১. ডিফল্ট সেকশনসমূহ (Trending, Featured, Recent, All Videos)
   const sections = (siteSettings.homeSections && siteSettings.homeSections.length) ? siteSettings.homeSections : DEFAULT_SECTIONS;
 
-  let rowsHtml = '';
   sections.forEach(sec=>{
     if(!sec.enabled) return;
     const vids = getVideosForSection(sec);
     if(!vids.length) return;
     rowsHtml += `
       <div class="row">
-        <div class="row-head"><h2 class="row-title">${escapeHtml(sec.title)}</h2></div>
+        <div class="row-head">
+          <h2 class="row-title">${escapeHtml(sec.title)}</h2>
+        </div>
         <div class="row-track">${vids.map(cardHtml).join('')}</div>
       </div>`;
+  });
+
+  // ২. অটোমেটিক ক্যাটাগরি ভিডিও রো (Admin Panel থেকে পাওয়া সকল ক্যাটাগরি সিরিয়ালি নিচে আসবে)
+  const dynamicCategories = getAvailableCategories();
+
+  dynamicCategories.forEach(cat => {
+    const catVids = allVideos.filter(v => (v.category||'').trim() === cat.name.trim());
+    if(catVids.length > 0){
+      rowsHtml += `
+        <div class="row">
+          <div class="row-head">
+            <h2 class="row-title">${cat.icon ? cat.icon + ' ' : ''}${escapeHtml(cat.name)}</h2>
+            <a href="#/category/${encodeURIComponent(cat.name)}" class="see-all-btn">See All →</a>
+          </div>
+          <div class="row-track">${catVids.map(cardHtml).join('')}</div>
+        </div>`;
+    }
   });
 
   if(!allVideos.length){
@@ -523,6 +546,31 @@ function renderHome(){
   root.querySelectorAll('.row-track, .grid').forEach(bindCards);
 }
 
+// অ্যাডমিন প্যানেলে তৈরি করা সব ক্যাটাগরি পাওয়ার জন্য হেল্পার ফাংশন
+function getAvailableCategories(){
+  const seen = new Set();
+  const categories = [];
+
+  // ১. Firestore Categories কালেকশনের তালিকা অনুযায়ী সাজানো
+  allCategories.forEach(c => {
+    if(c.name && c.name.trim()){
+      seen.add(c.name.trim());
+      categories.push({ name: c.name.trim(), icon: c.icon || '🎬' });
+    }
+  });
+
+  // ২. ভিডিওতে ব্যবহৃত কোনো নতুন ক্যাটাগরি থাকলে সেটিও যুক্ত করা
+  allVideos.forEach(v => {
+    const cat = (v.category||'').trim();
+    if(cat && !seen.has(cat)){
+      seen.add(cat);
+      categories.push({ name: cat, icon: '🎬' });
+    }
+  });
+
+  return categories;
+}
+
 function getVideosForSection(sec){
   if(sec.type === 'trending'){
     return [...allVideos].sort((a,b)=>(b.trending?1:0)-(a.trending?1:0) || (b.views||0)-(a.views||0)).slice(0,12).filter(v=> v.trending || v.views>0);
@@ -536,16 +584,7 @@ function getVideosForSection(sec){
 // ---------- Categories page ----------
 function renderCategoriesPage(){
   const root = document.getElementById('root');
-  const seen = new Set();
-  const cards = [];
-  allCategories.forEach(c=>{
-    seen.add(c.name.trim());
-    cards.push(c);
-  });
-  allVideos.forEach(v=>{
-    const cat = (v.category||'').trim();
-    if(cat && !seen.has(cat)){ seen.add(cat); cards.push({name:cat, icon:'🎬', color:'#1b1e24'}); }
-  });
+  const cards = getAvailableCategories();
 
   if(!cards.length){
     root.innerHTML = `<div class="page-wrap"><h1 class="page-title">Categories</h1><div class="empty-state"><h2>No categories found</h2></div></div>`;
