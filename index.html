@@ -478,19 +478,34 @@
     transform: scale(1.08);
   }
 
-  /* Mini / Theater floating player */
+  /* Mini / Theater Draggable Picture-in-Picture floating player */
   .player-frame-container.mini-mode{
     position:fixed;bottom:20px;right:20px;width:min(320px,86vw);aspect-ratio:16/9;
     z-index:500;box-shadow:0 14px 36px rgba(0,0,0,0.6);border:1px solid var(--border);
     animation:miniIn .2s ease;
+    cursor: move;
   }
+  .pip-header {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 30px;
+    background: rgba(0,0,0,0.6);
+    z-index: 12;
+    cursor: move;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    color: #fff;
+    font-size: 11px;
+  }
+  .player-frame-container.mini-mode .pip-header { display: flex; }
+
   @keyframes miniIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
   .mini-close-btn{
-    position:absolute;top:6px;right:6px;z-index:11;width:24px;height:24px;border-radius:5px;
-    background:rgba(0,0,0,0.7);color:#fff;border:none;font-size:13px;cursor:pointer;display:none;
-    align-items:center;justify-content:center;
+    width:20px;height:20px;border-radius:4px;
+    background:rgba(255,255,255,0.2);color:#fff;border:none;font-size:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
   }
-  .player-frame-container.mini-mode .mini-close-btn{display:flex;}
   .player-frame-container.mini-mode .player-fullscreen-icon{display:none;}
 
   .watch-meta{padding:20px 2px 0;}
@@ -558,6 +573,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
   }
   .comment-form {
     display: flex;
@@ -736,7 +752,7 @@
     <!-- Dynamic Auth Container -->
     <div id="authModalBody">
       <h3>Sign In / Sign Up</h3>
-      <p>Sign in with Google to comment, like, and unlock all features.</p>
+      <p>Sign in with Google to watch, comment, like, and unlock all features.</p>
       <button class="social-btn google" id="googleAuthBtn">
         <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
         Continue with Google
@@ -894,7 +910,7 @@ auth.onAuthStateChanged(user => {
     `;
     authModalBody.innerHTML = `
       <h3>Sign In / Sign Up</h3>
-      <p>Sign in with Google to comment, like, and unlock all features.</p>
+      <p>Sign in with Google to watch, comment, like, and unlock all features.</p>
       <button class="social-btn google" id="googleAuthBtnModal">
         <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
         Continue with Google
@@ -903,6 +919,15 @@ auth.onAuthStateChanged(user => {
     bindGoogleAuthBtn(document.getElementById('googleAuthBtnModal'));
   }
 });
+
+/* Check Sign-in Gate */
+function checkAuthAndRun(callback){
+  if(!currentUser){
+    authModal.classList.add('active');
+  } else {
+    if(callback) callback();
+  }
+}
 
 /* ---------- 3-Dots Menu & Search Toggle Script ---------- */
 const menuToggle = document.getElementById('menuToggle');
@@ -939,6 +964,7 @@ let allCategories = [];
 let siteSettings = {};
 let dataReady = false;
 let miniObserver = null;
+let isVideoStarted = false; // PiP triggers only if video is played
 
 const DEFAULT_SECTIONS = [
   {id:'trending', type:'trending', title:'🔥 Trending Now', enabled:true},
@@ -965,7 +991,7 @@ function isNew(v){
   return days <= 7;
 }
 
-// YouTube Style Card HTML with Title below + bookmark button
+// YouTube Style Card HTML
 function cardHtml(v){
   const thumb = thumbOf(v);
   let badges = '';
@@ -985,19 +1011,25 @@ function cardHtml(v){
     </div>
   `;
 }
+
 function bindCards(container){
   container.querySelectorAll('.video-item[data-id]').forEach(el=>{
     el.onclick = (e)=> {
       if(e.target.closest('[data-wl]')) return;
-      location.hash = '#/watch/' + el.dataset.id;
+      // SIGN IN GATE ON VIDEO CLICK
+      checkAuthAndRun(() => {
+        location.hash = '#/watch/' + el.dataset.id;
+      });
     };
   });
   container.querySelectorAll('[data-wl]').forEach(el=>{
     el.onclick = (e)=>{
       e.stopPropagation();
-      const nowSaved = toggleWatchLater(el.dataset.wl);
-      el.classList.toggle('saved', nowSaved);
-      el.textContent = nowSaved ? '✓' : '🔖';
+      checkAuthAndRun(() => {
+        const nowSaved = toggleWatchLater(el.dataset.wl);
+        el.classList.toggle('saved', nowSaved);
+        el.textContent = nowSaved ? '✓' : '🔖';
+      });
     };
   });
 }
@@ -1079,7 +1111,13 @@ function router(){
   if(miniObserver){ miniObserver.disconnect(); miniObserver = null; }
   document.querySelectorAll('.player-frame-container.mini-mode').forEach(el=>el.remove());
 
-  if(hash.startsWith('#/watch/')) renderWatch(decodeURIComponent(hash.slice(8)));
+  isVideoStarted = false; // Reset PiP logic state
+
+  if(hash.startsWith('#/watch/')) {
+    checkAuthAndRun(() => {
+      renderWatch(decodeURIComponent(hash.slice(8)));
+    });
+  }
   else if(hash.startsWith('#/category/')) renderCategoryVideos(decodeURIComponent(hash.slice(11)));
   else if(hash === '#/categories') renderCategoriesPage();
   else if(hash.startsWith('#/watchlater')) renderWatchLaterPage();
@@ -1121,7 +1159,6 @@ function renderHome(){
       ${announce.link ? `<a href="${escapeHtml(announce.link)}" target="_blank" rel="noopener">${announce.linkLabel ? escapeHtml(announce.linkLabel) : 'View →'}</a>` : ''}
     </div>` : '';
 
-  // Quick category filter chips (YouTube style)
   const chipCats = getAvailableCategories();
   const chipsHtml = chipCats.length ? `
     <div class="chips-row">
@@ -1168,8 +1205,8 @@ function renderHome(){
   root.innerHTML = heroHtml + announceHtml + chipsHtml + `<main class="${featured?'':'no-hero'} has-chips">${rowsHtml}</main>`;
 
   if(featured){
-    document.getElementById('heroPlayBtn').onclick = ()=> location.hash = '#/watch/'+featured.id;
-    document.getElementById('heroInfoBtn').onclick = ()=> location.hash = '#/watch/'+featured.id;
+    document.getElementById('heroPlayBtn').onclick = () => checkAuthAndRun(() => location.hash = '#/watch/'+featured.id);
+    document.getElementById('heroInfoBtn').onclick = () => checkAuthAndRun(() => location.hash = '#/watch/'+featured.id);
   }
   root.querySelectorAll('.chip-btn').forEach(chip=>{
     chip.onclick = ()=>{
@@ -1229,10 +1266,9 @@ function renderCategoriesPage(){
       <p class="page-sub">${cards.length} Categories</p>
       <div class="cat-card-grid">
         ${cards.map(c=>`
-          <div class="cat-card" style="background:${c.color||'var(--bg-card)'};border-color:var(--border);" data-cat="${escapeHtml(c.name)}">
+          <div class="cat-card" style="background:${c.color\vert{}\vert{}'var(--bg-card)'};border-color:var(--border);" data-cat="${escapeHtml(c.name)}">
             <div class="icon">${c.icon||'🎬'}</div>
-            <div class="name">${escapeHtml(c.name)}</div>
-            ${c.description ? `<div class="desc">${escapeHtml(c.description)}</div>` : ''}
+            <div class="name">${escapeHtml(c.name)}</div>${c.description ? `<div class="desc">${escapeHtml(c.description)}</div>` : ''}
           </div>
         `).join('')}
       </div>
@@ -1322,7 +1358,7 @@ function sortVideos(list, mode){
   const arr = [...list];
   if(mode === 'views') arr.sort((a,b)=>(b.views||0)-(a.views||0));
   else if(mode === 'oldest') arr.sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
-  else arr.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)); // latest (default)
+  else arr.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
   return arr;
 }
 function renderSearchPage(q){
@@ -1363,6 +1399,11 @@ function renderSearchPage(q){
 
 // ---------- Watch page ----------
 function renderWatch(id){
+  if(!currentUser) {
+    authModal.classList.add('active');
+    return;
+  }
+
   const v = allVideos.find(x=>x.id===id);
   const root = document.getElementById('root');
   if(!v){
@@ -1389,10 +1430,13 @@ function renderWatch(id){
         <div class="watch-main">
           <div id="playerPlaceholder">
             <div class="player-frame-container" id="playerContainer">
+              <div class="pip-header" id="pipDragHeader">
+                <span>📌 Drag to Move</span>
+                <button class="mini-close-btn" id="miniCloseBtn" title="Close mini player">×</button>
+              </div>
               <div class="player-frame">
                 <iframe id="videoIframe" src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&enablejsapi=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe>
               </div>
-              <button class="mini-close-btn" id="miniCloseBtn" title="Close mini player">×</button>
               <button class="player-fullscreen-icon" id="inPlayerFullscreenBtn" title="Fullscreen">⛶</button>
             </div>
           </div>
@@ -1431,10 +1475,10 @@ function renderWatch(id){
           </div>
 
           <div class="comments-section">
-            <div class="comments-header">💬 Comments (<span id="commentCount">0</span>)</div>
+            <div class="comments-header" id="toggleCommentsBtn">💬 Comments (<span id="commentCount">0</span>)</div>
             <form class="comment-form" id="commentForm">
-              <input type="text" id="commentUser" placeholder="Your Name" required>
-              <textarea id="commentText" placeholder="Add a comment..." required></textarea>
+              <input type="text" id="commentUser" placeholder="Your Name" required readonly style="opacity:0.8;">
+              <textarea id="commentText" placeholder="Add a public comment..." required></textarea>
               <button type="submit" class="comment-submit-btn">Comment</button>
             </form>
             <div class="comments-list" id="commentsList">
@@ -1453,6 +1497,9 @@ function renderWatch(id){
     </div>`;
 
   document.getElementById('backBtn').onclick = ()=> history.length > 1 ? history.back() : (location.hash = '#/');
+
+  // Mark Video Started
+  isVideoStarted = true;
 
   // Landscape & Overlay Fullscreen Button Handling
   const playerContainer = document.getElementById('playerContainer');
@@ -1475,26 +1522,76 @@ function renderWatch(id){
     }
   };
 
-  // ---- Mini / Theater floating player: keeps playing when scrolled out of view ----
+  // Draggable Picture-in-Picture Floating Player Logic
   const placeholder = document.getElementById('playerPlaceholder');
   const miniCloseBtn = document.getElementById('miniCloseBtn');
+
   if('IntersectionObserver' in window){
     miniObserver = new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
         if(!location.hash.startsWith('#/watch/')) return;
-        if(!entry.isIntersecting){
+        // PiP activated ONLY IF video has started playing and scrolled away
+        if(!entry.isIntersecting && isVideoStarted){
           playerContainer.classList.add('mini-mode');
         } else {
           playerContainer.classList.remove('mini-mode');
+          playerContainer.style.top = '';
+          playerContainer.style.left = '';
         }
       });
     }, {threshold:0});
     miniObserver.observe(placeholder);
   }
+
   miniCloseBtn.onclick = ()=>{
     playerContainer.classList.remove('mini-mode');
     window.scrollTo({top:0, behavior:'smooth'});
   };
+
+  // Dragging Implementation for Floating Mini Player
+  const dragHeader = document.getElementById('pipDragHeader');
+  let isDragging = false, offsetRight = 0, offsetBottom = 0;
+
+  dragHeader.addEventListener('mousedown', startDrag);
+  dragHeader.addEventListener('touchstart', startDrag, {passive: true});
+
+  function startDrag(e) {
+    if (!playerContainer.classList.contains('mini-mode')) return;
+    isDragging = true;
+    const clientX = e.clientX || e.touches[0].clientX;
+    const clientY = e.clientY || e.touches[0].clientY;
+    const rect = playerContainer.getBoundingClientRect();
+    offsetRight = clientX - rect.left;
+    offsetBottom = clientY - rect.top;
+
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('touchmove', moveDrag, {passive: false});
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+  }
+
+  function moveDrag(e) {
+    if (!isDragging) return;
+    if(e.cancelable) e.preventDefault();
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+    let left = clientX - offsetRight;
+    let top = clientY - offsetBottom;
+
+    playerContainer.style.left = `${left}px`;
+    playerContainer.style.top = `${top}px`;
+    playerContainer.style.bottom = 'auto';
+    playerContainer.style.right = 'auto';
+  }
+
+  function stopDrag() {
+    isDragging = false;
+    document.removeEventListener('mousemove', moveDrag);
+    document.removeEventListener('touchmove', moveDrag);
+    document.removeEventListener('mouseup', stopDrag);
+    document.removeEventListener('touchend', stopDrag);
+  }
 
   // Description Expand / Collapse Toggle
   const descBox = document.getElementById('descBox');
@@ -1515,52 +1612,56 @@ function renderWatch(id){
   if(currentUser) {
     const commentUser = document.getElementById('commentUser');
     if(commentUser) {
-      commentUser.value = currentUser.displayName || '';
+      commentUser.value = currentUser.displayName || 'User';
     }
   }
 
-  // Like System Logic (Save & Sync with Firebase + LocalStorage)
+  // Like System Logic
   const likeBtn = document.getElementById('likeBtn');
   const likeCountEl = document.getElementById('likeCount');
 
   likeBtn.onclick = () => {
-    if(!likedState) {
-      likedState = true;
-      localStorage.setItem('liked_' + v.id, 'true');
-      likeBtn.classList.add('liked');
+    checkAuthAndRun(() => {
+      if(!likedState) {
+        likedState = true;
+        localStorage.setItem('liked_' + v.id, 'true');
+        likeBtn.classList.add('liked');
 
-      const newLikes = (v.likes || 0) + 1;
-      v.likes = newLikes;
-      likeCountEl.textContent = newLikes;
+        const newLikes = (v.likes || 0) + 1;
+        v.likes = newLikes;
+        likeCountEl.textContent = newLikes;
 
-      db.collection('videos').doc(v.id).update({
-        likes: firebase.firestore.FieldValue.increment(1)
-      }).catch(()=>{});
-    } else {
-      likedState = false;
-      localStorage.removeItem('liked_' + v.id);
-      likeBtn.classList.remove('liked');
+        db.collection('videos').doc(v.id).update({
+          likes: firebase.firestore.FieldValue.increment(1)
+        }).catch(()=>{});
+      } else {
+        likedState = false;
+        localStorage.removeItem('liked_' + v.id);
+        likeBtn.classList.remove('liked');
 
-      const newLikes = Math.max(0, (v.likes || 1) - 1);
-      v.likes = newLikes;
-      likeCountEl.textContent = newLikes;
+        const newLikes = Math.max(0, (v.likes || 1) - 1);
+        v.likes = newLikes;
+        likeCountEl.textContent = newLikes;
 
-      db.collection('videos').doc(v.id).update({
-        likes: firebase.firestore.FieldValue.increment(-1)
-      }).catch(()=>{});
-    }
+        db.collection('videos').doc(v.id).update({
+          likes: firebase.firestore.FieldValue.increment(-1)
+        }).catch(()=>{});
+      }
+    });
   };
 
-  // Watch Later toggle button on the watch page itself
+  // Watch Later toggle
   const wlBtn = document.getElementById('wlBtn');
   const wlLabel = document.getElementById('wlLabel');
   wlBtn.onclick = ()=>{
-    const nowSaved = toggleWatchLater(v.id);
-    wlBtn.classList.toggle('saved', nowSaved);
-    wlLabel.textContent = nowSaved ? 'Saved' : 'Watch Later';
+    checkAuthAndRun(() => {
+      const nowSaved = toggleWatchLater(v.id);
+      wlBtn.classList.toggle('saved', nowSaved);
+      wlLabel.textContent = nowSaved ? 'Saved' : 'Watch Later';
+    });
   };
 
-  // Share button + dropdown (native share API, socials, copy link)
+  // Share button
   const shareBtn = document.getElementById('shareBtn');
   const shareDD = document.getElementById('shareDD');
   shareBtn.onclick = (e)=>{
@@ -1594,16 +1695,20 @@ function renderWatch(id){
     };
   });
 
-  // Comments Firestore Integration (with replies + like/dislike)
+  // Comments Firestore Integration
   loadComments(v.id);
 
   const commentForm = document.getElementById('commentForm');
   commentForm.onsubmit = (e) => {
     e.preventDefault();
-    const userName = document.getElementById('commentUser').value.trim();
+    if(!currentUser) {
+      authModal.classList.add('active');
+      return;
+    }
+    const userName = currentUser.displayName || 'Anonymous';
     const userText = document.getElementById('commentText').value.trim();
 
-    if(!userName || !userText) return;
+    if(!userText) return;
 
     db.collection('videos').doc(v.id).collection('comments').add({
       userName: userName,
@@ -1620,7 +1725,7 @@ function renderWatch(id){
 
   bindCards(root);
 
-  // Session-based view counting: only counts once per browser per video
+  // Track Views & History
   const viewedKey = 'viewed_' + v.id;
   if(!localStorage.getItem(viewedKey)){
     localStorage.setItem(viewedKey, '1');
@@ -1628,12 +1733,10 @@ function renderWatch(id){
       views: firebase.firestore.FieldValue.increment(1)
     }).then(()=>{ v.views = (v.views||0)+1; }).catch(()=>{});
   }
-
-  // Track watch history
   pushHistory(v.id);
 }
 
-// Function to load YouTube-style Comments with replies + like/dislike
+// YouTube-style Comments Engine
 function loadComments(videoId) {
   const commentsList = document.getElementById('commentsList');
   const commentCountEl = document.getElementById('commentCount');
@@ -1649,7 +1752,7 @@ function loadComments(videoId) {
       }
 
       const all = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
-      const topLevel = all.filter(c => !c.parentId).reverse(); // latest first
+      const topLevel = all.filter(c => !c.parentId).reverse();
       const repliesOf = (id) => all.filter(c => c.parentId === id);
 
       commentsList.innerHTML = topLevel.map(c => renderCommentHtml(videoId, c, repliesOf(c.id))).join('');
@@ -1683,8 +1786,7 @@ function renderCommentHtml(videoId, c, replies){
           <button class="comment-reply-btn" data-reply-toggle="${c.id}">Reply</button>
         </div>
         <form class="reply-form" id="replyForm-${c.id}">
-          <input type="text" placeholder="Your name" data-reply-user required>
-          <textarea placeholder="Write a reply..." data-reply-text required></textarea>
+          <textarea placeholder="Write a public reply..." data-reply-text required></textarea>
           <button type="submit">Reply</button>
         </form>
         ${replies.length ? `<div class="replies-block">${replies.map(r=>renderCommentHtml(videoId, r, [])).join('')}</div>` : ''}
@@ -1695,22 +1797,28 @@ function renderCommentHtml(videoId, c, replies){
 function bindCommentEvents(videoId){
   const commentsList = document.getElementById('commentsList');
 
-  // Reply toggle
   commentsList.querySelectorAll('[data-reply-toggle]').forEach(btn=>{
     btn.onclick = ()=>{
+      if(!currentUser){
+        authModal.classList.add('active');
+        return;
+      }
       const form = document.getElementById('replyForm-' + btn.dataset.replyToggle);
       form.classList.toggle('open');
     };
   });
 
-  // Reply submit
   commentsList.querySelectorAll('.reply-form').forEach(form=>{
     form.onsubmit = (e)=>{
       e.preventDefault();
+      if(!currentUser){
+        authModal.classList.add('active');
+        return;
+      }
       const parentId = form.id.replace('replyForm-','');
-      const userName = form.querySelector('[data-reply-user]').value.trim();
+      const userName = currentUser.displayName || 'Anonymous';
       const text = form.querySelector('[data-reply-text]').value.trim();
-      if(!userName || !text) return;
+      if(!text) return;
       db.collection('videos').doc(videoId).collection('comments').add({
         userName, text, parentId,
         likes: 0, dislikes: 0,
@@ -1719,9 +1827,12 @@ function bindCommentEvents(videoId){
     };
   });
 
-  // Like / Dislike voting
   commentsList.querySelectorAll('[data-vote]').forEach(btn=>{
     btn.onclick = ()=>{
+      if(!currentUser){
+        authModal.classList.add('active');
+        return;
+      }
       const cid = btn.dataset.cid;
       const type = btn.dataset.vote;
       const key = 'commentVote_' + cid;
@@ -1736,13 +1847,11 @@ function bindCommentEvents(videoId){
       let likeDelta = 0, dislikeDelta = 0, newState = type;
 
       if(current === type){
-        // un-vote
         if(type === 'like') likeDelta = -1; else dislikeDelta = -1;
         newState = '';
       } else if(current === '' ){
         if(type === 'like') likeDelta = 1; else dislikeDelta = 1;
       } else {
-        // switching vote
         if(type === 'like'){ likeDelta = 1; dislikeDelta = -1; }
         else { dislikeDelta = 1; likeDelta = -1; }
       }
@@ -1761,8 +1870,11 @@ function bindCommentEvents(videoId){
   });
 }
 
-// ---------- Search box behavior ----------
+// Search dropdown logic
 const searchDD = document.getElementById('searchDD');
+function closeSearchDD(){ searchDD.classList.remove('open'); }
+function goSearch(q){ location.hash = '#/search?q=' + encodeURIComponent(q); closeSearchDD(); }
+
 searchInput.addEventListener('input', ()=>{
   const q = searchInput.value.trim();
   if(!q){ closeSearchDD(); return; }
@@ -1777,25 +1889,25 @@ searchInput.addEventListener('input', ()=>{
       </div>
     `).join('') + `<div class="search-dd-more" id="ddMore">See all results →</div>`;
     searchDD.querySelectorAll('.search-dd-item').forEach(el=>{
-      el.onclick = ()=>{ location.hash = '#/watch/'+el.dataset.id; searchInput.value=''; closeSearchDD(); searchBox.classList.remove('active'); };
+      el.onclick = ()=>{ 
+        checkAuthAndRun(() => {
+          location.hash = '#/watch/'+el.dataset.id; 
+          searchInput.value=''; 
+          closeSearchDD(); 
+          searchBox.classList.remove('active'); 
+        });
+      };
     });
     document.getElementById('ddMore').onclick = ()=>{ goSearch(q); };
   }
   searchDD.classList.add('open');
 });
-searchInput.addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){ goSearch(searchInput.value.trim()); }
-});
-function goSearch(q){
-  if(!q) return;
-  location.hash = '#/search?q=' + encodeURIComponent(q);
-  closeSearchDD();
-  searchBox.classList.remove('active');
-}
-function closeSearchDD(){ searchDD.classList.remove('open'); }
 
-window.addEventListener('scroll', ()=>{
-  document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 30);
+searchInput.addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){
+    const q = searchInput.value.trim();
+    if(q) goSearch(q);
+  }
 });
 </script>
 </body>
