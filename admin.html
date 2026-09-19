@@ -316,29 +316,35 @@ let sectionsState = [
 ];
 
 // ---------- Auth ----------
-auth.onAuthStateChanged(user=>{
+auth.onAuthStateChanged(async user=>{
   if(user){
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('app').style.display='block';
-    loadVideos();
-    loadCategories();
-    loadSettings();
+    // Check admin status before showing anything
+    try{
+      const adminDoc = await db.collection('admins').doc(user.uid).get();
+      if(adminDoc.exists){
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('app').style.display='block';
+        loadVideos();
+        loadCategories();
+        loadSettings();
+      } else {
+        // Signed in but NOT an admin — deny access, force back to login
+        document.getElementById('app').style.display='none';
+        document.getElementById('loginScreen').style.display='flex';
+        document.getElementById('loginError').textContent = 'Access denied: this account is not an admin.';
+        await auth.signOut();
+      }
+    }catch(err){
+      document.getElementById('app').style.display='none';
+      document.getElementById('loginScreen').style.display='flex';
+      document.getElementById('loginError').textContent = 'Could not verify admin access.';
+      await auth.signOut();
+    }
   } else {
     document.getElementById('loginScreen').style.display='flex';
     document.getElementById('app').style.display='none';
   }
 });
-
-document.getElementById('loginBtn').onclick = ()=>{
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  document.getElementById('loginError').textContent = '';
-  auth.signInWithEmailAndPassword(email, pass).catch(()=>{
-    document.getElementById('loginError').textContent = 'Login failed: Invalid email or password.';
-  });
-};
-document.getElementById('logoutBtn').onclick = ()=> auth.signOut();
-document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('loginBtn').click(); });
 
 // ---------- Tabs ----------
 document.querySelectorAll('.tab-btn').forEach(btn=>{
