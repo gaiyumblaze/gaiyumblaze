@@ -315,29 +315,14 @@ let sectionsState = [
   {id:'all', type:'all', title:'📺 All Videos', enabled:true}
 ];
 
-// ---------- Auth with Admin Validation ----------
-auth.onAuthStateChanged(async user=>{
+// ---------- Auth ----------
+auth.onAuthStateChanged(user=>{
   if(user){
-    try {
-      const adminDoc = await db.collection('admins').doc(user.uid).get();
-      if(adminDoc.exists){
-        document.getElementById('loginScreen').style.display='none';
-        document.getElementById('app').style.display='block';
-        loadVideos();
-        loadCategories();
-        loadSettings();
-      } else {
-        await auth.signOut();
-        document.getElementById('loginScreen').style.display='flex';
-        document.getElementById('app').style.display='none';
-        document.getElementById('loginError').textContent = 'Access Denied: You are not an authorized admin.';
-      }
-    } catch(err) {
-      console.error(err);
-      await auth.signOut();
-      document.getElementById('loginScreen').style.display='flex';
-      document.getElementById('app').style.display='none';
-    }
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    loadVideos();
+    loadCategories();
+    loadSettings();
   } else {
     document.getElementById('loginScreen').style.display='flex';
     document.getElementById('app').style.display='none';
@@ -547,6 +532,7 @@ function loadCategories(){
       list.querySelectorAll('[data-cid]').forEach(btn=> btn.onclick = ()=> startCatEdit(btn.dataset.cid));
       list.querySelectorAll('[data-cdel]').forEach(btn=> btn.onclick = ()=> deleteCat(btn.dataset.cdel));
     }
+    // refresh datalist + category select for sections
     document.getElementById('catList').innerHTML = categoriesCache.map(c=>`<option value="${escapeHtml(c.name)}">`).join('');
     document.getElementById('newSecCategory').innerHTML = categoriesCache.map(c=>`<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
   });
